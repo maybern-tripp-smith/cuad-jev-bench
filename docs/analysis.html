@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="Pre-registered evaluation of TypeSafe/Jev on FOMC chair openings (cuad-jev-2026-09-20).">
+<meta name="description" content="Pre-registered TypeSafe/Jev evaluation of contract-clause relevance on the Contract Understanding Atticus Dataset (run cuad-jev-2026-09-20).">
 <meta http-equiv="Cache-Control" content="no-cache">
 <title>cuad-jev-bench — Analysis</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=IBM+Plex+Sans:wght@400;600&family=IBM+Plex+Mono:wght@400&display=swap">
@@ -62,7 +62,7 @@ nav {
 nav a { color: var(--accent); text-decoration: none; }
 nav a.active { font-weight: 600; border-bottom: 2px solid var(--accent); }
 main {
-  max-width: 42rem;
+  max-width: 48rem;
   margin: 0 auto;
   padding: 2rem 1.25rem 3rem;
   background: var(--paper);
@@ -79,15 +79,17 @@ h2 {
   font-weight: 600;
 }
 h3 { font-size: 1.02rem; margin: 1.35rem 0 0.5rem; font-weight: 600; }
+h4 { font-size: 0.96rem; margin: 1.1rem 0 0.4rem; font-weight: 600; }
 p { margin: 0.75rem 0; }
-.abstract {
-  background: #f0ebe3;
+.abstract, .howto {
   border: 1px solid var(--border);
   padding: 1rem 1.15rem;
   margin: 0 0 1.5rem;
   font-size: 0.98rem;
 }
-.abstract .label {
+.abstract { background: #f0ebe3; }
+.howto { background: #eef2f6; }
+.abstract .label, .howto .label {
   font-family: var(--sans);
   font-size: 0.72rem;
   letter-spacing: 0.06em;
@@ -95,9 +97,10 @@ p { margin: 0.75rem 0; }
   color: var(--muted);
   margin: 0 0 0.5rem;
 }
-.abstract p { margin: 0.55rem 0; }
-.abstract p:last-child { margin-bottom: 0; }
-table { width: 100%; border-collapse: collapse; font-size: 0.88rem; margin: 1rem 0; font-family: var(--sans); }
+.abstract p, .howto p { margin: 0.55rem 0; }
+.abstract p:last-child, .howto p:last-child { margin-bottom: 0; }
+.howto ol { margin: 0.4rem 0 0.2rem; }
+table { width: 100%; border-collapse: collapse; font-size: 0.86rem; margin: 1rem 0; font-family: var(--sans); }
 th, td { border: 1px solid var(--border); padding: 0.45rem 0.55rem; text-align: left; vertical-align: top; }
 th { background: #f0ebe3; font-weight: 600; }
 code, pre { font-family: var(--mono); font-size: 0.84rem; }
@@ -114,7 +117,7 @@ blockquote {
 ul, ol { padding-left: 1.25rem; }
 li { margin: 0.35rem 0; }
 footer {
-  max-width: 42rem;
+  max-width: 48rem;
   margin: 0 auto;
   padding: 1.25rem;
   color: var(--muted);
@@ -146,120 +149,141 @@ figcaption {
 </head>
 <body>
 <header>
-<p class="kicker">Technical report · run cuad-jev-2026-09-20</p>
+<p class="kicker">Pre-registered evaluation · run cuad-jev-2026-09-20</p>
 <h1>cuad-jev-bench</h1>
-<p>Contract-clause relevance on CUAD: pairwise Choice and graded Score under a frozen criterion</p>
+<p>A contract-clause relevance test on the Atticus public contracts, written so a non-specialist can rebuild it</p>
 </header>
 <nav>
 <a href="index.html">Overview</a> <a href="analysis.html" class="active">Analysis</a> <a href="report.html">Report</a> <a href="https://github.com/maybern-tripp-smith/cuad-jev-bench">GitHub</a>
 </nav>
 <main>
 <h1 class="page">Analysis</h1>
-<p><strong>run_id:</strong> <code>cuad-jev-2026-09-20</code>   <strong>model:</strong> <code>jev-1.13.0</code> (requested <code>jev-latest</code>)   <strong>criterion (exact):</strong> <code>more relevant to the requested contract category</code>   <strong>repository:</strong> <a href="https://github.com/maybern-tripp-smith/cuad-jev-bench">maybern-tripp-smith/cuad-jev-bench</a>   <strong>pages:</strong> <a href="https://maybern-tripp-smith.github.io/cuad-jev-bench/">https://maybern-tripp-smith.github.io/cuad-jev-bench/</a></p>
-<p>Companion gate report: <a href="report.html"><code>REPORT.md</code></a>. Machine-readable results: <a href="https://github.com/maybern-tripp-smith/cuad-jev-bench/blob/main/results/gates.json"><code>results/gates.json</code></a>, <a href="https://github.com/maybern-tripp-smith/cuad-jev-bench/blob/main/results/diagnostics.json"><code>results/diagnostics.json</code></a>. Figure captions: <a href="https://github.com/maybern-tripp-smith/cuad-jev-bench/blob/main/results/figures/CAPTIONS.md"><code>results/figures/CAPTIONS.md</code></a>.</p>
-<div class="abstract">
-<p class="label">Abstract</p>
-<p>Human annotations of contract clauses are a natural but incomplete label for <em>relevance to a requested legal category</em>: the same category string can apply to sparse spans in long commercial agreements, while nearby paragraphs share vocabulary without being on-point. This note reports a pre-registered evaluation of TypeSafe/Jev on the open CUAD corpus (Atticus Project, CC BY 4.0) under a frozen pairwise Choice and graded Score protocol. Labels are CUAD human span annotations only; the judge is never used to construct gold.</p>
-<p>On 40 rule-built certain pairs (Stratum A), Choice inversion is 0.000 (binomial standard error 0.000). On 200 same-contract BM25 hard-negative pairs (Stratum B), inversion is 0.320 (s.e. 0.033) with mean Brier score 0.250 (s.e. 0.026) and expected calibration error (ECE) 0.324. For 100 (contract, category) candidate-ranking queries, expected Score yields gold mean reciprocal rank (MRR) 0.917 (s.e. 0.021) versus BM25 MRR 0.469 (s.e. 0.041) and chance MRR 0.298 (s.e. 0.002). Gate 4 is interpreted as a <strong>construct-validity</strong> contrast: under the same category query, mean expected Score on gold spans (2.685, s.e. 0.062) exceeds the mean on BM25 hard-negatives (0.555, s.e. 0.027), a gap of 2.130 (s.e. 0.067). Name/date ablation leaves Stratum A inversion unchanged (Δ = 0.000). Gate 7 cites published DeBERTa-xlarge extractive metrics as a literature difficulty anchor only; this bench does not re-run DeBERTa and uses a different task shape. Total Jev spend is approximately $0.043; overall p50 latency is 182 ms.</p>
+<p><strong>run_id:</strong> <code>cuad-jev-2026-09-20</code> <strong>model:</strong> <code>jev-1.13.0</code> (requested <code>jev-latest</code>) <strong>criterion (exact):</strong> <code>more relevant to the requested contract category</code> <strong>repository:</strong> <a href="https://github.com/maybern-tripp-smith/cuad-jev-bench">maybern-tripp-smith/cuad-jev-bench</a> <strong>pages:</strong> <a href="https://maybern-tripp-smith.github.io/cuad-jev-bench/">https://maybern-tripp-smith.github.io/cuad-jev-bench/</a></p>
+<p>Companion gate report: <a href="report.html"><code>REPORT.md</code></a>. Landing-page glossary: <a href="index.html"><code>OVERVIEW.md</code></a>. Machine-readable results: <a href="https://github.com/maybern-tripp-smith/cuad-jev-bench/blob/main/results/gates.json"><code>results/gates.json</code></a>, <a href="https://github.com/maybern-tripp-smith/cuad-jev-bench/blob/main/results/diagnostics.json"><code>results/diagnostics.json</code></a>. Figure captions: <a href="https://github.com/maybern-tripp-smith/cuad-jev-bench/blob/main/results/figures/CAPTIONS.md"><code>results/figures/CAPTIONS.md</code></a>.</p>
+<div class="howto" id="how-to-read-this-analysis">
+<p class="label">How to read this analysis</p>
+<p>This note is written so a mid-career economist — fluent in private-equity language and ordinary applied statistics, not in legal natural-language processing — can rebuild the measurement from the prose. Every short label used in a table below is taught in this section before the abstract uses it. Uncertainty is a <strong>standard error</strong> (s.e.), never written STE. Observed counts, dollars, and file times are from this run; we do not invent a metric or a DeBERTa number.</p>
+<p><strong>The corpus.</strong> The <strong>Contract Understanding Atticus Dataset</strong> (CUAD) is 510 public commercial contracts released by the <strong>Atticus Project</strong> (Hendrycks, Burns, Chen, and Ball, 2021; Creative Commons Attribution 4.0). Lawyers marked <strong>13,823 spans</strong> — contiguous character ranges — as answers to <strong>41 category</strong> questions (governing law, cap on liability, anti-assignment, license grant, and so on). We split the contracts into <strong>21,598</strong> paragraph-ish chunks (target ≤1,600 characters). Category prompts are the Atticus “Details” text in <code>data/clean/categories.json</code>. Gold is those human spans only.</p>
+<p><strong>Two constructs.</strong> An <em>annotation / location</em> measure asks whether a system recovered the same characters a human highlighted. A <em>relevance</em> measure asks whether, given a category description, one text is more on-point than another. This bench is the second. Nearby paragraphs often share vocabulary with a marked clause without being the clause.</p>
+<p><strong>The judge.</strong> <strong>TypeSafe</strong> is an application programming interface that returns <em>typed</em> judgments (a structured object), not a chat paragraph. <strong>Jev</strong> is the judge model (<code>jev-latest</code> → <code>jev-1.13.0</code>). <strong>Choice</strong> takes Text A, Text B, and the frozen criterion, and returns a winner plus <em>p</em>(A), <em>p</em>(B). <strong>Score</strong> takes one paragraph and four levels — irrelevant / weakly relevant / relevant / highly relevant — and returns a probability on each level. <strong>Expected score</strong> is 0·<em>p</em>(irrelevant) + 1·<em>p</em>(weakly relevant) + 2·<em>p</em>(relevant) + 3·<em>p</em>(highly relevant), so it lives on 0 to 3.</p>
+<p><strong>The keyword baseline.</strong> <strong>Best Match 25</strong> (BM25) is a keyword-overlap ranker: it scores a paragraph by query-word frequency, discounted by how common those words are and by paragraph length. It does not understand contracts. We use <code>rank_bm25.BM25Okapi</code> as (i) a source of look-alike distractors and (ii) a ranking baseline. If Jev cannot beat word overlap, the bench is not showing more than lexical match.</p>
+<p><strong>Hard negatives and strata.</strong> A <em>negative</em> is a paragraph that is not the marked span for the requested category. A <strong>hard negative</strong> is a negative a keyword ranker would surface (same contract, shared vocabulary). <strong>Stratum A</strong> (n=40) pairs a gold span with a paragraph from a <em>different</em> contract that has <em>no</em> mark for that category — a certain, easy contrast. <strong>Stratum B</strong> (n=200) pairs a gold span with the highest Best Match 25 non-overlapping paragraph in the <em>same</em> contract — the hard contrast. Seed <code>20260920</code>. A third slice, 100 (contract, category) <strong>candidate queries</strong>, takes Best Match 25’s top 10 paragraphs; if gold is missing (28 of 100 queries), we inject one gold paragraph so Jev’s rank is measurable and we do <strong>not</strong> count that as keyword success.</p>
+<p><strong>Inversion.</strong> Each Choice pair is shown in both orders. Probabilities are mapped onto the gold side and averaged (<strong>p(gold)</strong>). If that average is below 0.5, the implied winner is the distractor — an <strong>inversion</strong>. The inversion rate is the share of such pairs. An <strong>order-flip</strong> is disagreement between the two presentation orders’ discrete winners.</p>
+<p><strong>Construct validity.</strong> A score has construct validity when it moves with the thing you claim to measure. Gate 4 asks whether, under the <em>same</em> category question, mean expected Score on gold spans exceeds mean expected Score on hard negatives. That is a measurement check, not a retrieval-quality claim.</p>
+<p><strong>Brier score.</strong> Mean squared error of a probability. Label <em>y</em> = 1 (gold is the correct side by construction). One pair: (<em>p</em>(gold) − 1)². Average over pairs. 0 is perfect; 0.25 matches a constant 0.5; 1 is a confident inversion.</p>
+<p><strong>Reliability and expected calibration error.</strong> A reliability diagram bins predicted <em>p</em>(gold) and plots mean prediction against an observed frequency. <strong>Expected calibration error</strong> is the probability-weighted absolute gap across ten equal-width bins. Gate 5’s table number <strong>0.324</strong> uses <em>y</em> = 1 (the Brier convention). The reliability figure’s vertical axis is the share of pairs whose discrete winner was gold (1 minus inversion); the number printed on that figure is 0.109 in <code>results/diagnostics.json</code>. We do not temperature-fit after the fact.</p>
+<p><strong>Mean reciprocal rank and recall at k.</strong> Rank of gold = position of the first marked paragraph (1 = top). Reciprocal rank = 1/rank. <strong>Mean reciprocal rank</strong> averages that over the 100 queries. <strong>Recall at k</strong> is the share of queries with gold in the top <em>k</em>. Chance recall among ten slots is <em>k</em>/10.</p>
+<p><strong>DeBERTa (literature only).</strong> Hendrycks et al. (2021) report extractive numbers for a <strong>DeBERTa-xlarge</strong> model that highlights character spans — a different task. Published: area under the precision–recall curve 47.8; precision at 80% recall 44.0; precision at 90% recall 17.8. <strong>Jaccard ≥ 0.5</strong> (two spans match if intersection-over-union is at least one half) is cited as that literature’s overlap rule; we do not recompute it. <strong>We did not re-run DeBERTa.</strong></p>
+<p><strong>Standard errors.</strong> Rates: binomial √[<em>p</em>(1−<em>p</em>)/<em>n</em>]. Means and Brier: sample standard deviation / √<em>n</em> (bootstrap s.e. retained in <code>gates.json</code> where previously computed). Gate 4 gap s.e. = √(s.e._gold² + s.e._neg²) in the diagnostic file; the table also stores a bootstrap gap s.e.</p>
 </div>
-<h2>Contributions</h2>
-<ol><li>A FedLock/fedjev-style open-data Jev bench for <strong>contract-clause relevance</strong> with pre-registered gates, frozen gold, cost/latency artifacts, and expanded diagnostic figures.</li><li>Design A: certain cross-contract negatives (Stratum A) plus same-contract BM25 hard-negatives (Stratum B), dual-order Choice.</li><li>Candidate-score lite: BM25 top-10 re-ranked by Jev Score levels, with gold injection logged when needed for measurable rank.</li><li>An explicit construct-validity gate (Gate 4): gold versus non-gold under the same category query, reported with standard errors—not a product claim about retrieval quality alone.</li><li>An honest Gate 7: literature extractive DeBERTa numbers for difficulty narrative only; not a re-run and not a like-for-like task comparison.</li></ol>
-<h2>1. Introduction</h2>
-<p>Empirical work on contract understanding often treats extractive span overlap or retrieval hit-rate as sufficient evidence that a model “understands” a category. Those measures conflate two constructs:</p>
-<ol><li><strong>Annotation / location measure</strong> — whether a system recovers the same character spans humans marked for a CUAD category.</li><li><strong>Relevance measure</strong> — whether, given a category description, a text unit is judged more on-point than a hard negative drawn from the same document or from a contract lacking that category.</li></ol>
-<p>The evaluation question studied here is therefore:</p>
-<blockquote>Under a fixed pairwise criterion and graded Score levels, does Jev recover (i) obvious gold-versus-certain-negative orderings, (ii) discrimination against BM25 hard-negatives with reported calibration, and (iii) a Score ordering in which gold spans sit above hard-negatives under the <em>same</em> category query—evidence of construct validity for the relevance Score axis?</blockquote>
+<div class="abstract" id="abstract">
+<p class="label">Abstract</p>
+<p>Human marks of contract clauses are a natural but incomplete label for <em>relevance to a requested legal category</em>: the same category string can apply to sparse spans in a long commercial agreement, while nearby paragraphs share vocabulary without being on-point. This note reports a pre-registered evaluation of TypeSafe Jev on the open Contract Understanding Atticus Dataset under a frozen pairwise Choice and graded Score protocol. Labels are Atticus human spans only; the judge is never used to construct gold.</p>
+<p>On 40 rule-built certain pairs (Stratum A), Choice inversion is 0.000 (binomial standard error 0.000). On 200 same-contract Best Match 25 hard-negative pairs (Stratum B), inversion is 0.320 (s.e. 0.033) with mean Brier score 0.250 (s.e. 0.026) and expected calibration error 0.324 under the gold-as-correct convention. For 100 (contract, category) candidate-ranking queries, expected Score yields gold mean reciprocal rank 0.917 (s.e. 0.021) versus Best Match 25 0.469 (s.e. 0.041) and chance 0.298 (s.e. 0.002). Gate 4 is a construct-validity contrast: under the same category question, mean expected Score on gold spans (2.685, s.e. 0.062) exceeds the mean on hard negatives (0.555, s.e. 0.027), a gap of 2.130 (s.e. 0.067). Leaving party names and dates in Stratum A leaves inversion unchanged (change = 0.000). Gate 7 cites published DeBERTa-xlarge extractive metrics as a literature difficulty anchor only; this bench does not re-run DeBERTa and uses a different task shape. Total Jev spend is $0.043149; median (50th percentile) latency is 182 milliseconds.</p>
+</div>
+<h2 id="what-this-bench-adds">What this bench adds</h2>
+<ol><li>An open-data Jev bench for contract-clause <em>relevance</em> with pre-registered gates, frozen gold, cost and latency artifacts, and diagnostic figures.</li><li>Design A: certain cross-contract negatives (Stratum A) plus same-contract Best Match 25 hard negatives (Stratum B), Choice in both presentation orders.</li><li>Candidate-score lite: Best Match 25 top-10 re-ranked by Jev Score levels, with gold injection logged when needed for measurable rank (28 of 100 queries).</li><li>An explicit construct-validity gate (Gate 4): gold versus non-gold under the same category question, with standard errors.</li><li>An honest Gate 7: literature extractive DeBERTa numbers for difficulty narrative only — not a re-run and not a like-for-like task comparison.</li></ol>
+<h2 id="1-introduction">1. Introduction</h2>
+<p>Empirical work on contract understanding often treats extractive span overlap or retrieval hit-rate as sufficient evidence that a model “understands” a category. Those measures conflate the two constructs taught above: location of a highlight versus relevance of a text unit.</p>
+<p>The evaluation question is therefore the three-part relevance question in the “How to read” section: easy orderings, hard-negative discrimination with calibration reported, and a Score gap under a shared category question.</p>
 <p>Gates were registered before any Jev output. Pass/fail applies to Gates 1, 3 (signal), 4, and 6; Gates 2, 5, and 7 are report-only.</p>
-<h2>2. Data</h2>
+<h2 id="2-data">2. Data</h2>
 <table><thead><tr><th>Corpus</th><th>Path</th><th>Role</th></tr></thead><tbody><tr><td>CUAD v1 contracts</td><td><code>data/raw/CUAD_v1/CUAD_v1.json</code></td><td>Source text (CC BY 4.0)</td></tr><tr><td>Paragraph chunks</td><td><code>data/clean/paragraphs.jsonl</code></td><td>21,598 units</td></tr><tr><td>Human spans</td><td><code>data/labels/spans.jsonl</code></td><td>13,823 annotations across 41 categories</td></tr><tr><td>Frozen gold</td><td><code>data/pairs/gold_pairs.jsonl</code></td><td>Strata A/B + candidate queries</td></tr></tbody></table>
-<p><strong>Labels.</strong> CUAD human spans only. Category prompts use CUAD question “Details” text.</p>
-<p><strong>Exclusions / design choices (pre-registered).</strong> No post-hoc dropping of inverted Stratum A pairs. Candidate scoring injects gold into BM25 top-10 when absent so rank is measurable; injection is logged and is not counted as BM25 retrieval success.</p>
+<p><strong>Labels.</strong> Atticus human spans only. Category prompts use CUAD question “Details” text.</p>
+<p><strong>Exclusions / design choices (pre-registered).</strong> No post-hoc dropping of inverted Stratum A pairs. Candidate scoring injects gold into the Best Match 25 top-10 when absent so rank is measurable; injection is logged and is not counted as keyword retrieval success. 28 of 100 queries were injected; those pre-injection keyword ranks range from 11 to 204.</p>
 <p><strong>Gold freeze.</strong> Pairs were written before the first live call (REPORT mtime 17:30:16 EDT; gold mtime 17:32:37 EDT; scoring after freeze).</p>
 <figure>
-<img src="docs/figures/corpus_diagnostics.svg" alt="Corpus diagnostics">
-<figcaption>Figure. Corpus shape for CUAD v1 after paragraph chunking: character-length distribution of paragraphs; spans per contract; top-15 category frequencies among human annotations. Full caption: <a href="https://github.com/maybern-tripp-smith/cuad-jev-bench/blob/main/results/figures/CAPTIONS.md"><code>results/figures/CAPTIONS.md</code></a>.</figcaption>
+<img src="figures/corpus_diagnostics.svg" alt="Corpus diagnostics">
+<figcaption>Figure. Shape of the Contract Understanding Atticus Dataset after our paragraph split. Left: character-length distribution of the 21,598 chunks (target cap 1,600 characters; median 1,364). Center: number of human-marked spans per contract. Right: the fifteen most frequent of the 41 categories among 13,823 marks (Parties is the largest, 2,554 marks; Price Restrictions is among the smallest, 27). Read this as “what the corpus looks like,” not as a model result.</figcaption>
 </figure>
-<h2>3. Method</h2>
-<p><strong>Choice (primary for Gates 1–2, 6).</strong> Criterion string (exact): <code>more relevant to the requested contract category</code>. Both presentation orders; probabilities mapped to the gold side and averaged. Inversion = averaged winner ≠ gold. Meta stripping via <code>scripts/strip_meta.py</code> for main tables; Gate 6 re-runs Stratum A with names/dates left in.</p>
-<p><strong>Score (Gates 3–4).</strong> Levels <code>irrelevant / weakly relevant / relevant / highly relevant</code>. Expected score = Σ i·p_i with i ∈ {0,1,2,3}.</p>
+<h2 id="3-method">3. Method</h2>
+<p><strong>Choice (primary for Gates 1–2, 6).</strong> Criterion string (exact): <code>more relevant to the requested contract category</code>. Both presentation orders; probabilities mapped to the gold side and averaged. Inversion = averaged winner is not gold. Meta stripping via <code>scripts/strip_meta.py</code> for main tables; Gate 6 re-runs Stratum A with names and dates left in.</p>
+<p><strong>Score (Gates 3–4).</strong> Levels <code>irrelevant / weakly relevant / relevant / highly relevant</code>. Expected score = Σ <em>i</em> · <em>p</em>ᵢ with <em>i</em> ∈ {0, 1, 2, 3}.</p>
 <p><strong>Strata.</strong></p>
-<table><thead><tr><th>Stratum</th><th>n</th><th>Construction</th></tr></thead><tbody><tr><td>A</td><td>40</td><td>Gold span vs paragraph from a contract with no annotation for that category</td></tr><tr><td>B</td><td>200</td><td>Gold span vs BM25 hard-neg in the same contract (seed 20260920)</td></tr><tr><td>Candidates</td><td>100 queries × ≤10 paras</td><td>BM25 top-10; gold injected if absent</td></tr></tbody></table>
-<p><strong>Uncertainty.</strong> Inversion and order-flip rates: binomial standard error √[p(1−p)/n]. Means and Brier: s.e. = sample sd/√n (bootstrap s.e. retained in <code>gates.json</code> / <code>accuracy_summary.json</code> where previously computed). Gate 4 gap s.e. = √(se_gold² + se_neg²). Calibration: ten equal-width bins on p(gold); ECE as the probability-weighted absolute gap between confidence and accuracy.</p>
-<h2>4. Pre-registered gates and results</h2>
-<table><thead><tr><th>#</th><th>Gate</th><th>Pass line</th><th>Result</th></tr></thead><tbody><tr><td>1</td><td>Easy-pair inversion (A)</td><td>≤ 0.05</td><td><span class="pass">PASS</span> — 0.000 (n=40, s.e. 0.000)</td></tr><tr><td>2</td><td>Labeled inversion + Brier (B)</td><td>report</td><td>inv=0.320 (s.e. 0.033); Brier=0.250 (s.e. 0.026); mean p(gold)=0.676 (n=200)</td></tr><tr><td>3</td><td>Candidate Score vs BM25</td><td>Jev MRR &gt; BM25 MRR</td><td><strong>PASS_SIGNAL</strong> — MRR 0.917 (s.e. 0.021) &gt; 0.469 (s.e. 0.041); chance 0.298</td></tr><tr><td>4</td><td>Construct validity</td><td>mean Score(gold) &gt; mean Score(neg)</td><td><span class="pass">PASS</span> — 2.685 (s.e. 0.062) &gt; 0.555 (s.e. 0.027); gap 2.130 (s.e. 0.067)</td></tr><tr><td>5</td><td>Secondary calibration</td><td>report</td><td>Brier=0.250 (s.e. 0.026); ECE=0.324 (n=200)</td></tr><tr><td>6</td><td>Name/meta ablation</td><td>Δ inv ≤ 0.05</td><td><span class="pass">PASS</span> — Δ=0.000</td></tr><tr><td>7</td><td>Literature DeBERTa</td><td>report only</td><td>AUPR 47.8; P@80R 44.0; P@90R 17.8 (Hendrycks et al. 2021). <strong>Not re-run.</strong></td></tr></tbody></table>
-<h3>4.1 Inversion by stratum</h3>
-<table><thead><tr><th>Stratum</th><th>n</th><th>inverted</th><th>inversion (s.e.)</th><th>mean p(gold)</th><th>mean Brier (s.e.)</th><th>order-flip</th></tr></thead><tbody><tr><td>A certain</td><td>40</td><td>0</td><td>0.000 (0.000)</td><td>0.976</td><td>0.007 (0.004)</td><td>0.000</td></tr><tr><td>B labeled</td><td>200</td><td>64</td><td>0.320 (0.033)</td><td>0.676</td><td>0.250 (0.026)</td><td>0.075</td></tr></tbody></table>
+<table><thead><tr><th>Stratum</th><th>n</th><th>Construction</th></tr></thead><tbody><tr><td>A</td><td>40</td><td>Gold span versus a paragraph from a contract with no annotation for that category</td></tr><tr><td>B</td><td>200</td><td>Gold span versus a Best Match 25 hard negative in the same contract (seed 20260920)</td></tr><tr><td>Candidates</td><td>100 queries × ≤10 paragraphs</td><td>Best Match 25 top-10; gold injected if absent (28 queries)</td></tr></tbody></table>
+<p><strong>Uncertainty.</strong> Inversion and order-flip rates: binomial standard error √[<em>p</em>(1−<em>p</em>)/<em>n</em>]. Means and Brier: s.e. = sample standard deviation / √<em>n</em> (bootstrap s.e. retained in <code>gates.json</code> / <code>accuracy_summary.json</code> where previously computed). Gate 4 gap s.e. = √(s.e._gold² + s.e._neg²). Calibration: ten equal-width bins on <em>p</em>(gold); Gate 5 expected calibration error uses the gold-as-correct (<em>y</em> = 1) convention shared with Brier.</p>
+<p>A reader who wants to redo the work, rather than re-interpret it, should follow <a href="#7-reproducibility">section 7</a> in order: download CUAD → prepare paragraphs → freeze gold → Jev calls → gate script. Do not mutate the frozen gold file after scoring.</p>
+<h2 id="4-pre-registered-gates-and-results">4. Pre-registered gates and results</h2>
+<table><thead><tr><th>#</th><th>Gate</th><th>Pass line</th><th>Result</th></tr></thead><tbody><tr><td>1</td><td>Easy-pair inversion (A)</td><td>≤ 0.05</td><td><span class="pass">PASS</span> — 0.000 (n=40, s.e. 0.000)</td></tr><tr><td>2</td><td>Labeled inversion + Brier (B)</td><td>report</td><td>inversion 0.320 (s.e. 0.033); Brier 0.250 (s.e. 0.026); mean <em>p</em>(gold) 0.676 (n=200)</td></tr><tr><td>3</td><td>Candidate Score vs Best Match 25</td><td>Jev mean reciprocal rank &gt; keyword mean reciprocal rank</td><td><span class="pass">PASS_SIGNAL</span> — 0.917 (s.e. 0.021) &gt; 0.469 (s.e. 0.041); chance 0.298</td></tr><tr><td>4</td><td>Construct validity</td><td>mean Score(gold) &gt; mean Score(negatives)</td><td><span class="pass">PASS</span> — 2.685 (s.e. 0.062) &gt; 0.555 (s.e. 0.027); gap 2.130 (s.e. 0.067)</td></tr><tr><td>5</td><td>Secondary calibration</td><td>report</td><td>Brier 0.250 (s.e. 0.026); expected calibration error 0.324 (n=200)</td></tr><tr><td>6</td><td>Name/meta ablation</td><td>change in inversion ≤ 0.05</td><td><span class="pass">PASS</span> — change 0.000</td></tr><tr><td>7</td><td>Literature DeBERTa</td><td>report only</td><td>area under the precision–recall curve 47.8; precision at 80% recall 44.0; precision at 90% recall 17.8 (Hendrycks et al. 2021). <strong>Not re-run.</strong></td></tr></tbody></table>
+<h3 id="4-1-inversion-by-stratum">4.1 Inversion by stratum</h3>
+<p>On the easy contrast, the judge never reversed the human label. On the hard contrast it reversed 64 of 200 pairs. Mean <em>p</em>(gold) falls from 0.976 on Stratum A to 0.676 on Stratum B, which is what a harder discrimination setting should look like if the distractors are doing work.</p>
+<table><thead><tr><th>Stratum</th><th>n</th><th>inverted</th><th>inversion (s.e.)</th><th>mean <em>p</em>(gold)</th><th>mean Brier (s.e.)</th><th>order-flip</th></tr></thead><tbody><tr><td>A certain</td><td>40</td><td>0</td><td>0.000 (0.000)</td><td>0.976</td><td>0.007 (0.004)</td><td>0.000</td></tr><tr><td>B labeled</td><td>200</td><td>64</td><td>0.320 (0.033)</td><td>0.676</td><td>0.250 (0.026)</td><td>0.075</td></tr></tbody></table>
 <figure>
-<img src="docs/figures/inversion_rates.svg" alt="Inversion rates">
-<figcaption>Figure. Choice inversion rates ± binomial standard error for Stratum A (n=40) and Stratum B (n=200). Dashed line: Gate 1 threshold (0.05).</figcaption>
+<img src="figures/inversion_rates.svg" alt="Inversion rates">
+<figcaption>Figure. Choice inversion rates ± binomial standard error for Stratum A (n=40) and Stratum B (n=200). The dashed line is the Gate 1 threshold (0.05). Height is the share of pairs whose averaged winner was the distractor. Stratum A sits at 0; Stratum B sits at 0.320 (s.e. 0.033).</figcaption>
 </figure>
 <figure>
-<img src="docs/figures/p_gold_distribution.svg" alt="p(gold) distribution">
-<figcaption>Figure. Distribution of Choice p(gold) under stripped meta for Stratum A versus Stratum B. The leftward shift in B is consistent with a harder discrimination setting under BM25 hard-negatives.</figcaption>
+<img src="figures/p_gold_distribution.svg" alt="p(gold) distribution">
+<figcaption>Figure. Distribution of Choice <em>p</em>(gold) under stripped names and dates, Stratum A versus Stratum B. Vertical dashes mark stratum means (0.976 and 0.676). The leftward shift in B is the harder same-contract setting: more probability mass away from certainty that the marked span is the more relevant text.</figcaption>
 </figure>
-<h3>4.2 Calibration (Gate 5)</h3>
+<h3 id="4-2-calibration-gate-5">4.2 Calibration (Gate 5)</h3>
+<p>Mean Brier on Stratum B is 0.250 (s.e. 0.026) — about the score of always saying 50/50 — which is consistent with a hard task and with the 64 confident-looking inversions that pull the squared error up. Gate 5’s expected calibration error of 0.324 (<em>n</em> = 200) is the binned <em>y</em> = 1 summary taught above.</p>
 <figure>
-<img src="docs/figures/reliability_stratum_b.svg" alt="Reliability">
-<figcaption>Figure. Reliability diagram for Stratum B p(gold). Marker area is proportional to bin count. ECE = 0.324 (n=200), indicating overconfidence relative to binary correctness; no post-hoc temperature fitting is applied.</figcaption>
+<img src="figures/reliability_stratum_b.svg" alt="Reliability">
+<figcaption>Figure. Reliability diagram for Stratum B <em>p</em>(gold). Horizontal: mean predicted <em>p</em>(gold) in a ten-point-wide bin. Vertical: share of pairs in that bin whose discrete winner was the gold span (1 minus inversion). Marker area is proportional to bin count (n=200). The dashed diagonal is a perfect match of those two axes. The number printed on the figure is the bin-wise expected calibration error against that discrete-correctness axis (0.109 in diagnostics). Gate 5’s table uses the gold-as-correct convention and reports 0.324. No post-hoc temperature fitting.</figcaption>
 </figure>
-<h3>4.3 Candidate ranking (Gate 3)</h3>
-<table><thead><tr><th>Estimator</th><th>MRR (s.e.)</th><th>R@1 (s.e.)</th><th>R@3 (s.e.)</th><th>R@5 (s.e.)</th></tr></thead><tbody><tr><td>Jev Score</td><td>0.917 (0.021)</td><td>0.86 (0.035)</td><td>0.97 (0.017)</td><td>0.99 (0.010)</td></tr><tr><td>BM25</td><td>0.469 (0.041)</td><td>0.35 (0.047)</td><td>0.51 (0.050)</td><td>0.57 (0.051)</td></tr><tr><td>Chance</td><td>0.298 (0.002)</td><td>0.10*</td><td>0.30*</td><td>0.50*</td></tr></tbody></table>
-<p>\*Chance Recall@k among ten candidates is k/10 (deterministic benchmark).</p>
+<h3 id="4-3-candidate-ranking-gate-3">4.3 Candidate ranking (Gate 3)</h3>
+<p>Jev’s mean reciprocal rank of 0.917 means that, on a typical query, the marked paragraph is first or just behind first (1/1 = 1, 1/2 = 0.5; an average of 0.917 is mostly ones). Best Match 25’s 0.469 is closer to “gold often second-to-fourth, and missing from the top 10 on 28 queries.” Recall at 1 is 0.86 versus 0.35: the keyword ranker puts gold first on 35 of 100 queries; Jev does so on 86 of 100.</p>
+<table><thead><tr><th>Estimator</th><th>Mean reciprocal rank (s.e.)</th><th>Recall@1 (s.e.)</th><th>Recall@3 (s.e.)</th><th>Recall@5 (s.e.)</th></tr></thead><tbody><tr><td>Jev Score</td><td>0.917 (0.021)</td><td>0.86 (0.035)</td><td>0.97 (0.017)</td><td>0.99 (0.010)</td></tr><tr><td>Best Match 25</td><td>0.469 (0.041)</td><td>0.35 (0.047)</td><td>0.51 (0.050)</td><td>0.57 (0.051)</td></tr><tr><td>Chance</td><td>0.298 (0.002)</td><td>0.10*</td><td>0.30*</td><td>0.50*</td></tr></tbody></table>
+<p>\<em>Chance recall at </em>k<em> among ten candidates is </em>k*/10 (deterministic benchmark).</p>
 <figure>
-<img src="docs/figures/mrr_recall_vs_baselines.svg" alt="MRR and Recall">
-<figcaption>Figure. Left: gold MRR under Jev Score, BM25, and chance (n_q=100) ± standard error. Right: Recall@{1,3,5} for Jev and BM25 (± s.e.) against chance k/10.</figcaption>
-</figure>
-<figure>
-<img src="docs/figures/gold_rank_hist_cdf.svg" alt="Gold rank hist/CDF">
-<figcaption>Figure. Histogram and empirical CDF of the rank of the gold paragraph under Jev Score versus BM25. Mass near rank 1 under Jev indicates recovery of annotated spans above the lexical baseline.</figcaption>
-</figure>
-<h3>4.4 Construct validity (Gate 4)</h3>
-<p>Gate 4 asks whether the Score axis separates gold from non-gold <strong>under the same category query</strong>—a construct-validity contrast, not a claim that Score alone solves extractive QA.</p>
-<figure>
-<img src="docs/figures/gold_vs_neg_scores.svg" alt="Gold vs neg scores">
-<figcaption>Figure. Mean expected Score on gold CUAD spans (n=100) versus BM25 hard-negative paragraphs (n=882), ± standard error of the mean. Gap = 2.130 (s.e. 0.067).</figcaption>
+<img src="figures/mrr_recall_vs_baselines.svg" alt="Mean reciprocal rank and recall">
+<figcaption>Figure. Left: gold mean reciprocal rank under Jev Score, Best Match 25, and chance (n=100 queries) ± standard error. Right: recall at 1, 3, and 5 for Jev and Best Match 25 (± s.e.) against chance <em>k</em>/10. Best Match 25 columns use pre-injection ranks.</figcaption>
 </figure>
 <figure>
-<img src="docs/figures/category_diagnostics.svg" alt="Category diagnostics">
-<figcaption>Figure. Left: Stratum B inversion by CUAD category (± binomial s.e.; n≥3). Right: mean Score(gold)−Score(neg) by category (± s.e. across queries).</figcaption>
+<img src="figures/gold_rank_hist_cdf.svg" alt="Gold rank histogram and cumulative distribution">
+<figcaption>Figure. Left: histogram of the rank of the gold paragraph (1 = highest) under Jev Score versus Best Match 25. Right: empirical cumulative distribution of those ranks — the share of queries whose gold rank is at most the value on the horizontal axis. Mass near rank 1 under Jev is recovery of annotated spans above the lexical baseline. Best Match 25 has a longer right tail, including the 28 queries where gold was outside the keyword top 10.</figcaption>
 </figure>
-<h3>4.5 Agreement and name ablation (Gate 6)</h3>
+<h3 id="4-4-construct-validity-gate-4">4.4 Construct validity (Gate 4)</h3>
+<p>Gate 4 asks whether the Score axis separates gold from non-gold <strong>under the same category query</strong>. Mean expected Score on gold is 2.685 on the 0-to-3 scale — between “relevant” and “highly relevant.” Mean on the 882 hard-negative paragraphs is 0.555 — between “irrelevant” and “weakly relevant.” The gap 2.130 (s.e. 0.067) is the construct-validity contrast. It is not a claim that Score alone solves extractive question answering.</p>
 <figure>
-<img src="docs/figures/agreement_ablation.svg" alt="Agreement / ablation">
-<figcaption>Figure. Left: order-flip rates for Strata A and B (± binomial s.e.). Right: Stratum A inversion under stripped versus names-in text; Δ = 0.000.</figcaption>
-</figure>
-<h3>4.6 Cost, tokens, and latency</h3>
-<p>Total ≈ <strong>$0.04315</strong> over 1,542 logged calls (1,027,363 input tokens @ $0.042/MTok; output free). Overall latency mean 191.1 ms, <strong>p50 182 ms</strong>, p95 258 ms (concurrency 6).</p>
-<figure>
-<img src="docs/figures/cost_by_stratum.svg" alt="Cost by stratum">
-<figcaption>Figure. Dollar cost by call slice at published Jev input pricing.</figcaption>
+<img src="figures/gold_vs_neg_scores.svg" alt="Gold vs neg scores">
+<figcaption>Figure. Mean expected Score on gold Atticus spans (n=100) versus Best Match 25 hard-negative paragraphs (n=882), ± standard error of the mean. Gap = 2.130 (s.e. 0.067). Horizontal categories are the two groups in Gate 4; vertical is the 0-to-3 expected-score axis.</figcaption>
 </figure>
 <figure>
-<img src="docs/figures/token_usage_by_stratum.svg" alt="Token usage">
-<figcaption>Figure. Input and output token counts by the same slices.</figcaption>
+<img src="figures/category_diagnostics.svg" alt="Category diagnostics">
+<figcaption>Figure. Left: Stratum B inversion by Atticus category (± binomial s.e.; categories with at least 3 pairs). Right: mean Score(gold) − Score(negatives) by category (± s.e. across queries), a category-level construct-validity contrast. Rare categories are noisy; do not over-read a single bar.</figcaption>
+</figure>
+<h3 id="4-5-agreement-and-name-ablation-gate-6">4.5 Agreement and name ablation (Gate 6)</h3>
+<p>Order-flip rate is 0.000 on Stratum A and 0.075 on Stratum B. Leaving party names and dates in the 40 easy pairs does not change inversion (0.000 versus 0.000). The judge’s easy-pair success is not an artifact of matching letterhead.</p>
+<figure>
+<img src="figures/agreement_ablation.svg" alt="Agreement / ablation">
+<figcaption>Figure. Left: order-flip rates for Strata A and B (± binomial s.e.) — the share of pairs whose discrete winner changed when Text A and Text B were swapped. Right: Stratum A inversion under stripped text versus names-and-dates-in text (Gate 6); change = 0.000.</figcaption>
+</figure>
+<h3 id="4-6-cost-tokens-and-latency">4.6 Cost, tokens, and latency</h3>
+<p>Total ≈ <strong>$0.04315</strong> over 1,542 logged calls (1,027,363 input tokens at $0.042 per million input tokens; output free). Overall latency mean 191.1 milliseconds, <strong>median (50th percentile) 182 milliseconds</strong>, 95th percentile 258 milliseconds (concurrency 6). Candidate Score accounts for $0.026772 of the $0.043149 — 982 of 1,542 calls.</p>
+<figure>
+<img src="figures/cost_by_stratum.svg" alt="Cost by stratum">
+<figcaption>Figure. Dollar cost by call slice at published Jev input pricing ($0.042 per million input tokens). Slices are Choice on Stratum A stripped, Choice on Stratum A with names in, Choice on Stratum B stripped, and Score on candidate paragraphs.</figcaption>
 </figure>
 <figure>
-<img src="docs/figures/latency_by_call_type.svg" alt="Latency by call type">
-<figcaption>Figure. Latency distributions for Choice versus Score calls (histogram and boxplot).</figcaption>
+<img src="figures/token_usage_by_stratum.svg" alt="Token usage">
+<figcaption>Figure. Input and output token counts by the same slices as the cost panel. Output is not billed. Input volume is dominated by the 637,421 tokens on candidate Score calls.</figcaption>
 </figure>
-<h3>4.7 Literature DeBERTa (Gate 7)</h3>
-<p>Published DeBERTa-xlarge extractive metrics (Hendrycks et al. 2021): AUPR 47.8, P@80R 44.0, P@90R 17.8. These describe <strong>extractive</strong> difficulty on CUAD. This bench’s task is candidate scoring / pairwise relevance; numerical comparison is narrative only. <strong>DeBERTa is not re-run.</strong></p>
-<h2>5. Interpretation</h2>
-<p>Stratum A shows that under an easy relevance contrast, Jev Choice does not invert. Stratum B is harder: BM25-selected negatives from the same contract share topical vocabulary, and inversion rises to about 32%—consistent with a difficult discrimination setting rather than a vacuous task. Candidate Score recovers gold paragraphs far above BM25 and chance. The Gate 4 gold−neg Score gap supports construct validity of the relevance Score axis under a shared category query. Calibration on Stratum B (ECE ≈ 0.32) indicates overconfidence relative to binary gold; we report this without temperature fitting. Gate 7’s DeBERTa numbers remain a literature difficulty anchor, not a within-bench baseline.</p>
-<h2>6. Limitations</h2>
-<ul><li>Paragraph chunking is heuristic; gold spans may cross chunk boundaries (mapping via character overlap).</li><li>BM25 hard-negatives are strong but not adversarial human negatives.</li><li>Category descriptions are CUAD “Details” text, not independently authored rubrics.</li><li>No Haiku comparator (by design for this run).</li><li>ECE uses ten equal-width bins on p(gold); n=200 limits bin stability.</li><li>Gold injection for measurable rank inflates Jev rank opportunity relative to pure retrieval; BM25 metrics use pre-injection ranks.</li><li>Category-level inversion estimates are noisy for rare categories.</li></ul>
-<h2>7. Reproducibility</h2>
-<pre><code>python scripts/prepare_cuad.py          # requires data/raw/CUAD_v1/CUAD_v1.json
+<figure>
+<img src="figures/latency_by_call_type.svg" alt="Latency by call type">
+<figcaption>Figure. End-to-end API latency in milliseconds for Choice versus Score calls. Left: overlapping histograms. Right: boxplots with extreme outliers suppressed. The published median across all timed calls is 182 milliseconds.</figcaption>
+</figure>
+<h3 id="4-7-literature-deberta-gate-7">4.7 Literature DeBERTa (Gate 7)</h3>
+<p>Published DeBERTa-xlarge extractive metrics (Hendrycks et al. 2021): area under the precision–recall curve 47.8, precision at 80% recall 44.0, precision at 90% recall 17.8. Jaccard ≥ 0.5 is that paper’s span-overlap rule; we do not recompute it. These numbers describe <strong>extractive</strong> difficulty on CUAD. This bench’s task is candidate scoring and pairwise relevance. Numerical comparison is narrative only. <strong>DeBERTa is not re-run.</strong></p>
+<h2 id="5-interpretation">5. Interpretation</h2>
+<p>Stratum A shows that under an easy relevance contrast, Jev Choice does not invert. Stratum B is harder: Best Match 25 negatives from the same contract share topical vocabulary, and inversion rises to 64 of 200 pairs (0.320, s.e. 0.033) — consistent with a difficult discrimination setting rather than a vacuous task. Candidate Score recovers gold paragraphs far above Best Match 25 and chance. The Gate 4 gold-minus-negative Score gap supports construct validity of the relevance Score axis under a shared category query. Calibration on Stratum B (expected calibration error 0.324 under the <em>y</em> = 1 convention) says assigned <em>p</em>(gold) sits well short of certainty that the marked span is the more relevant text; we report this without temperature fitting. Gate 7’s DeBERTa numbers remain a literature difficulty anchor, not a within-bench baseline.</p>
+<h2 id="6-limitations">6. Limitations</h2>
+<ul><li>Paragraph chunking is heuristic; gold spans may cross chunk boundaries (mapping via character overlap).</li><li>Best Match 25 hard negatives are strong but not adversarial human negatives.</li><li>Category descriptions are Atticus “Details” text, not independently authored rubrics.</li><li>No Haiku comparator (by design for this run).</li><li>Expected calibration error uses ten equal-width bins; n=200 limits bin stability. Gate 5 and the reliability figure use different observed-frequency conventions, as taught above.</li><li>Gold injection for measurable rank inflates Jev’s rank opportunity relative to pure retrieval; Best Match 25 metrics use pre-injection ranks (28 of 100 queries injected).</li><li>Category-level inversion estimates are noisy for rare categories.</li></ul>
+<h2 id="7-reproducibility">7. Reproducibility</h2>
+<pre><code>pip install -e .   # or: uv sync
+# place CUAD_v1.json under data/raw/CUAD_v1/ (see DATA.md)
+python scripts/prepare_cuad.py          # requires data/raw/CUAD_v1/CUAD_v1.json
 python scripts/build_gold_pairs.py      # freezes pairs; do not mutate after scoring
 python score.py --concurrency 6
 python score.py --only-ablation --concurrency 6
 python scripts/analyze_gates.py
 python scripts/plot_figures.py
 python scripts/render_docs.py</code></pre>
-<p>Environment: <code>TYPESAFE_API_KEY</code>. Seed <code>20260920</code>. Cache: <code>runs/jev/cache/</code>. Diagnostics: <code>results/diagnostics.json</code>.</p>
+<p>Environment: <code>TYPESAFE_API_KEY</code>. Seed <code>20260920</code>. Cache: <code>runs/jev/cache/</code>. Diagnostics: <code>results/diagnostics.json</code>. This published run is already scored; the commands are the reconstruction path. Do not mutate frozen gold. Do not treat Gate 7 as a command that runs DeBERTa — that file copies published extractive numbers.</p>
 </main>
 <footer>
-Research instrumentation only. CUAD text is CC BY 4.0 (Atticus Project). Companion repository:
+Research instrumentation only. Contract Understanding Atticus Dataset text is CC BY 4.0 (Atticus Project). Companion repository:
 <a href="https://github.com/maybern-tripp-smith/cuad-jev-bench">maybern-tripp-smith/cuad-jev-bench</a>.
 
 </footer>
