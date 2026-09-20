@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Render ANALYSIS.md / REPORT.md into the light paper HTML under docs/."""
+"""Render OVERVIEW.md / ANALYSIS.md / REPORT.md into the light paper HTML under docs/."""
 
 from __future__ import annotations
 
@@ -64,7 +64,7 @@ nav {
 nav a { color: var(--accent); text-decoration: none; }
 nav a.active { font-weight: 600; border-bottom: 2px solid var(--accent); }
 main {
-  max-width: 42rem;
+  max-width: 48rem;
   margin: 0 auto;
   padding: 2rem 1.25rem 3rem;
   background: var(--paper);
@@ -81,15 +81,17 @@ h2 {
   font-weight: 600;
 }
 h3 { font-size: 1.02rem; margin: 1.35rem 0 0.5rem; font-weight: 600; }
+h4 { font-size: 0.96rem; margin: 1.1rem 0 0.4rem; font-weight: 600; }
 p { margin: 0.75rem 0; }
-.abstract {
-  background: #f0ebe3;
+.abstract, .howto {
   border: 1px solid var(--border);
   padding: 1rem 1.15rem;
   margin: 0 0 1.5rem;
   font-size: 0.98rem;
 }
-.abstract .label {
+.abstract { background: #f0ebe3; }
+.howto { background: #eef2f6; }
+.abstract .label, .howto .label {
   font-family: var(--sans);
   font-size: 0.72rem;
   letter-spacing: 0.06em;
@@ -97,9 +99,10 @@ p { margin: 0.75rem 0; }
   color: var(--muted);
   margin: 0 0 0.5rem;
 }
-.abstract p { margin: 0.55rem 0; }
-.abstract p:last-child { margin-bottom: 0; }
-table { width: 100%; border-collapse: collapse; font-size: 0.88rem; margin: 1rem 0; font-family: var(--sans); }
+.abstract p, .howto p { margin: 0.55rem 0; }
+.abstract p:last-child, .howto p:last-child { margin-bottom: 0; }
+.howto ol { margin: 0.4rem 0 0.2rem; }
+table { width: 100%; border-collapse: collapse; font-size: 0.86rem; margin: 1rem 0; font-family: var(--sans); }
 th, td { border: 1px solid var(--border); padding: 0.45rem 0.55rem; text-align: left; vertical-align: top; }
 th { background: #f0ebe3; font-weight: 600; }
 code, pre { font-family: var(--mono); font-size: 0.84rem; }
@@ -116,7 +119,7 @@ blockquote {
 ul, ol { padding-left: 1.25rem; }
 li { margin: 0.35rem 0; }
 footer {
-  max-width: 42rem;
+  max-width: 48rem;
   margin: 0 auto;
   padding: 1.25rem;
   color: var(--muted);
@@ -147,20 +150,49 @@ figcaption {
 
 REPO = "https://github.com/maybern-tripp-smith/cuad-jev-bench"
 
-
 PAGE_LINKS = {
+    "OVERVIEW.md": "index.html",
     "ANALYSIS.md": "analysis.html",
     "REPORT.md": "report.html",
-    "CITATION": "https://github.com/maybern-tripp-smith/cuad-jev-bench/blob/main/CITATION",
+    "CITATION": f"{REPO}/blob/main/CITATION",
 }
+
+BOX_HEADINGS = {
+    "Abstract": "abstract",
+    "How to read this report": "howto",
+    "How to read this analysis": "howto",
+    "Terms used in this report": "howto",
+}
+
+META_DESCRIPTION = (
+    "Pre-registered TypeSafe/Jev evaluation of contract-clause relevance "
+    "on the Contract Understanding Atticus Dataset (run cuad-jev-2026-09-20)."
+)
+
+
+def heading_id(title: str) -> str:
+    text = re.sub(r"[*`]", "", title)
+    text = text.lower()
+    text = re.sub(r"[^a-z0-9]+", "-", text).strip("-")
+    return text
 
 
 def rewrite_href(url: str) -> str:
     if url in PAGE_LINKS:
         return PAGE_LINKS[url]
     if url.startswith("results/") or url.startswith("data/"):
-        return f"https://github.com/maybern-tripp-smith/cuad-jev-bench/blob/main/{url}"
+        return f"{REPO}/blob/main/{url}"
     return url
+
+
+def rewrite_img_src(src: str) -> str:
+    if src.startswith("./"):
+        src = src[2:]
+    if src.startswith("docs/figures/"):
+        return src[len("docs/") :]
+    if src.startswith("results/figures/"):
+        return "figures/" + src.split("results/figures/", 1)[1]
+    return src
 
 
 def inline(text: str) -> str:
@@ -184,8 +216,6 @@ def inline(text: str) -> str:
     text = html.escape(text)
     text = re.sub(r"\*\*(.+?)\*\*", r"<strong>\1</strong>", text)
     text = re.sub(r"(?<!\*)\*(?!\*)(.+?)(?<!\*)\*(?!\*)", r"<em>\1</em>", text)
-    text = text.replace("**PASS**", '<span class="pass">PASS</span>')
-    text = re.sub(r"> \*\*PASS\*\*", r'> <span class="pass">PASS</span>', text)
 
     for i, (label, url) in enumerate(links):
         inner = inline_no_link(label)
@@ -194,6 +224,7 @@ def inline(text: str) -> str:
     for i, code in enumerate(codes):
         text = text.replace(f"\x00C{i}\x00", f"<code>{code}</code>")
     text = text.replace("<strong>PASS</strong>", '<span class="pass">PASS</span>')
+    text = text.replace("<strong>PASS_SIGNAL</strong>", '<span class="pass">PASS_SIGNAL</span>')
     return text
 
 
@@ -229,13 +260,19 @@ def parse_table(lines: list[str]) -> str:
     return "".join(out)
 
 
-def md_to_html(md: str, *, drop_h1: bool = True, abstract_box: bool = False) -> str:
+def md_to_html(md: str, *, drop_h1: bool = True) -> str:
     lines = md.replace("\r\n", "\n").split("\n")
     out: list[str] = []
     i = 0
-    in_abstract = False
+    in_box: str | None = None
     n = len(lines)
     skipped_h1 = False
+
+    def close_box() -> None:
+        nonlocal in_box
+        if in_box:
+            out.append("</div>")
+            in_box = None
 
     while i < n:
         line = lines[i]
@@ -259,7 +296,7 @@ def md_to_html(md: str, *, drop_h1: bool = True, abstract_box: bool = False) -> 
                 i += 1
             out.append(parse_table(table_lines))
             continue
-        m = re.match(r"^(#{1,3})\s+(.*)$", line)
+        m = re.match(r"^(#{1,4})\s+(.*)$", line)
         if m:
             level = len(m.group(1))
             title = m.group(2).strip()
@@ -267,27 +304,25 @@ def md_to_html(md: str, *, drop_h1: bool = True, abstract_box: bool = False) -> 
                 skipped_h1 = True
                 i += 1
                 continue
-            if title == "Abstract" and abstract_box:
-                if in_abstract:
-                    out.append("</div>")
-                    in_abstract = False
-                out.append('<div class="abstract">')
-                out.append('<p class="label">Abstract</p>')
-                in_abstract = True
+            box_class = BOX_HEADINGS.get(title)
+            if box_class:
+                close_box()
+                hid = heading_id(title)
+                out.append(f'<div class="{box_class}" id="{html.escape(hid, quote=True)}">')
+                out.append(f'<p class="label">{inline(title)}</p>')
+                in_box = box_class
                 i += 1
                 continue
-            if in_abstract:
-                out.append("</div>")
-                in_abstract = False
+            if in_box:
+                close_box()
+            hid = heading_id(title)
             tag = f"h{level}"
-            out.append(f"<{tag}>{inline(title)}</{tag}>")
+            out.append(f'<{tag} id="{html.escape(hid, quote=True)}">{inline(title)}</{tag}>')
             i += 1
             continue
         img = re.match(r"^!\[([^\]]*)\]\(([^)]+)\)\s*$", line)
         if img:
-            alt, src = img.group(1), img.group(2)
-            if src.startswith("results/figures/"):
-                src = "figures/" + src.split("results/figures/", 1)[1]
+            alt, src = img.group(1), rewrite_img_src(img.group(2))
             cap = None
             j = i + 1
             if j < n and not lines[j].strip():
@@ -297,7 +332,7 @@ def md_to_html(md: str, *, drop_h1: bool = True, abstract_box: bool = False) -> 
                 i = j + 1
             else:
                 i += 1
-            block = ['<figure>']
+            block = ["<figure>"]
             block.append(
                 f'<img src="{html.escape(src, quote=True)}" alt="{html.escape(alt, quote=True)}">'
             )
@@ -333,15 +368,15 @@ def md_to_html(md: str, *, drop_h1: bool = True, abstract_box: bool = False) -> 
             continue
         para = [line]
         i += 1
-        while i < n and lines[i].strip() and not re.match(r"^(#{1,3}\s+|```|\||---$|[-*]\s+|\d+\.\s+|> )", lines[i]):
+        while i < n and lines[i].strip() and not re.match(
+            r"^(#{1,4}\s+|```|\||---$|[-*]\s+|\d+\.\s+|> )", lines[i]
+        ):
             para.append(lines[i])
             i += 1
         out.append("<p>" + inline(" ".join(para)) + "</p>")
-        if in_abstract and i < n and re.match(r"^#{1,3}\s+", lines[i] if i < n else ""):
-            out.append("</div>")
-            in_abstract = False
-    if in_abstract:
-        out.append("</div>")
+        if in_box and i < n and re.match(r"^#{1,4}\s+", lines[i] if i < n else ""):
+            close_box()
+    close_box()
     return "\n".join(out)
 
 
@@ -361,13 +396,13 @@ def page(
         cls = ' class="active"' if key == active else ""
         nav.append(f'<a href="{href}"{cls}>{label}</a>')
     nav.append(f'<a href="{REPO}">GitHub</a>')
-    h = f"<h1 class=\"page\">{html.escape(heading)}</h1>\n" if heading else ""
+    h = f'<h1 class="page">{html.escape(heading)}</h1>\n' if heading else ""
     return f"""<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="Pre-registered evaluation of TypeSafe/Jev on FOMC chair openings (cuad-jev-2026-09-20).">
+<meta name="description" content="{html.escape(META_DESCRIPTION, quote=True)}">
 <meta http-equiv="Cache-Control" content="no-cache">
 <title>{html.escape(title)}</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=IBM+Plex+Sans:wght@400;600&family=IBM+Plex+Mono:wght@400&display=swap">
@@ -377,9 +412,9 @@ def page(
 </head>
 <body>
 <header>
-<p class="kicker">Technical report · run cuad-jev-2026-09-20</p>
+<p class="kicker">Pre-registered evaluation · run cuad-jev-2026-09-20</p>
 <h1>cuad-jev-bench</h1>
-<p>Contract-clause relevance on CUAD: pairwise Choice and graded Score under a frozen criterion</p>
+<p>A contract-clause relevance test on the Atticus public contracts, written so a non-specialist can rebuild it</p>
 </header>
 <nav>
 {" ".join(nav)}
@@ -388,7 +423,7 @@ def page(
 {h}{body}
 </main>
 <footer>
-Research instrumentation only. CUAD text is CC BY 4.0 (Atticus Project). Companion repository:
+Research instrumentation only. Contract Understanding Atticus Dataset text is CC BY 4.0 (Atticus Project). Companion repository:
 <a href="{REPO}">maybern-tripp-smith/cuad-jev-bench</a>.
 
 </footer>
@@ -397,68 +432,19 @@ Research instrumentation only. CUAD text is CC BY 4.0 (Atticus Project). Compani
 """
 
 
-def index_body() -> str:
-    return """
-<div class="abstract">
-<p class="label">Abstract</p>
-<p>Human annotations of contract clauses are a natural but incomplete label for relevance to a requested legal category. Nearby paragraphs often share vocabulary without being on-point.</p>
-<p>This note reports a pre-registered evaluation of TypeSafe/Jev on the open CUAD corpus under the fixed criterion <code>more relevant to the requested contract category</code>. Primary quantities are reported with standard errors (s.e.). Gate 4 is a construct-validity contrast: mean Score on gold spans versus BM25 hard-negatives under the same category query. Gate 7 cites published DeBERTa extractive metrics for difficulty context only and does not re-run DeBERTa.</p>
-</div>
-
-<h2>Measurement</h2>
-<p>Two constructs are distinguished. The annotation measure is recovery of human CUAD spans. The relevance measure is pairwise Choice and graded Score against hard negatives under a fixed category description.</p>
-<p>Gates 1, 3 (signal), 4, and 6 are pre-registered pass/fail or signal tests. Gates 2, 5, and 7 are report-only.</p>
-
-<h2>Selected estimates</h2>
-<table>
-<thead><tr><th>Gate</th><th>Estimate</th></tr></thead>
-<tbody>
-<tr><td>1 Easy-pair inversion</td><td><span class="pass">PASS</span> — 0.000 (n=40, s.e. 0.000)</td></tr>
-<tr><td>3 Candidate MRR (Jev vs BM25)</td><td><span class="pass">PASS_SIGNAL</span> — 0.917 (s.e. 0.021) &gt; 0.469 (s.e. 0.041)</td></tr>
-<tr><td>4 Construct validity (Score gap)</td><td><span class="pass">PASS</span> — 2.130 (s.e. 0.067)</td></tr>
-<tr><td>6 Name/meta stability</td><td><span class="pass">PASS</span> — Δ inversion = 0.000</td></tr>
-<tr><td>7 Literature DeBERTa</td><td>report only — not a re-run</td></tr>
-</tbody>
-</table>
-
-<h2>Selected figures</h2>
-<figure>
-<img src="figures/inversion_rates.svg" alt="Inversion rates by stratum">
-<figcaption>Choice inversion rates ± binomial standard error for Stratum A (n=40) and Stratum B (n=200). Dashed line: Gate 1 threshold (0.05).</figcaption>
-</figure>
-<figure>
-<img src="figures/gold_vs_neg_scores.svg" alt="Gold versus hard-negative Score means">
-<figcaption>Gate 4 construct validity: mean expected Score on gold spans versus BM25 hard-negatives ± standard error.</figcaption>
-</figure>
-<figure>
-<img src="figures/mrr_recall_vs_baselines.svg" alt="MRR and Recall versus baselines">
-<figcaption>Gold MRR and Recall@k under Jev Score, BM25, and chance (± s.e. where defined).</figcaption>
-</figure>
-
-<h2>Documents</h2>
-<ul>
-<li><a href="analysis.html">Analysis</a> — methods, results, figures, limitations</li>
-<li><a href="report.html">Report</a> — gate tables, cost, and artifacts</li>
-<li>Machine-readable: <code>results/gates.json</code>, <code>results/diagnostics.json</code></li>
-</ul>
-"""
-
-
-
 def main() -> None:
+    overview_md = (ROOT / "OVERVIEW.md").read_text()
     analysis_md = (ROOT / "ANALYSIS.md").read_text()
     report_md = (ROOT / "REPORT.md").read_text()
-    analysis_html = md_to_html(analysis_md, drop_h1=True, abstract_box=True)
-    report_html = md_to_html(report_md, drop_h1=True, abstract_box=True)
 
     (DOCS / "index.html").write_text(
-        page("cuad-jev-bench — Overview", "index", index_body().strip())
+        page("cuad-jev-bench — Overview", "index", md_to_html(overview_md, drop_h1=True))
     )
     (DOCS / "analysis.html").write_text(
         page(
             "cuad-jev-bench — Analysis",
             "analysis",
-            analysis_html,
+            md_to_html(analysis_md, drop_h1=True),
             heading="Analysis",
         )
     )
@@ -466,7 +452,7 @@ def main() -> None:
         page(
             "cuad-jev-bench — Report",
             "report",
-            report_html,
+            md_to_html(report_md, drop_h1=True),
             heading="Report",
         )
     )

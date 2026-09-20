@@ -1,6 +1,16 @@
 # cuad-jev-bench
 
-Pre-registered evaluation of **TypeSafe/Jev** on open CUAD contract text: pairwise Choice and graded Score under the fixed criterion `more relevant to the requested contract category`. The note distinguishes annotation/location measures from relevance judgments, reports standard errors (s.e.) throughout, and treats Gate 4 as construct validity (gold versus hard-negatives under the same category query). Gate 7 cites published DeBERTa extractive metrics for difficulty context only and does not re-run DeBERTa.
+This repository is a pre-registered test of a **structured** contract-clause judge on an open set of commercial contracts. It is written so a reader fluent in finance and ordinary empirical work — not in legal natural-language processing — can rebuild the measurement.
+
+**The corpus.** The Contract Understanding Atticus Dataset (CUAD), released by the Atticus Project (Hendrycks, Burns, Chen, and Ball, 2021; Creative Commons Attribution 4.0), contains **510** contracts and human marks for **41** clause categories (**13,823** marked spans). Categories are diligence questions a reader would search for: governing law, cap on liability, anti-assignment, license grant, and so on. Gold is those human spans only.
+
+**The judge.** TypeSafe Jev returns *typed* judgments — a **Choice** (which of two texts is more relevant to a requested category, with probabilities) or a **Score** (one of four relevance levels with a probability on each level) — not a chat paragraph. The frozen criterion is `more relevant to the requested contract category`. The judge never writes gold.
+
+**The cheap baseline.** Best Match 25 (BM25) is a keyword-overlap ranker. We use it to propose same-contract look-alike distractors (**hard negatives**) and as a ranking baseline. If the judge cannot beat word overlap, the bench is not showing more than lexical match.
+
+**What is scored.** **Stratum A** (n=40) is an easy pair: a marked span versus a paragraph from a contract that has no mark for that category. **Stratum B** (n=200) is a hard pair: a marked span versus a Best Match 25 distractor in the same contract. An **inversion** is the judge reversing the human label after both presentation orders are averaged. **Construct validity** (Gate 4) asks whether, under the same category question, mean Score on marked spans exceeds mean Score on those distractors. **Mean reciprocal rank** is the average of 1/(rank of gold) over 100 queries; **recall at *k*** is the share of queries with gold in the top *k*. **Brier score** is mean squared error of *p*(gold). **Expected calibration error** is a binned gap between predicted probability and an observed frequency.
+
+**What “pass” means.** Seven **gates** were registered before any live call. Gates 1, 3 (signal), 4, and 6 have pass/fail or signal lines. Gates 2, 5, and 7 are report-only. Gate 7 cites published extractive numbers from a DeBERTa-xlarge model (area under the precision–recall curve 47.8; precision at 80% / 90% recall 44.0 / 17.8; Jaccard ≥ 0.5 is that paper’s span-overlap rule). **We did not re-run DeBERTa.** Uncertainty is a standard error (s.e.), never STE.
 
 | | |
 |--|--|
@@ -11,25 +21,28 @@ Pre-registered evaluation of **TypeSafe/Jev** on open CUAD contract text: pairwi
 | **labels** | Human CUAD spans only |
 | **Pages** | [https://maybern-tripp-smith.github.io/cuad-jev-bench/](https://maybern-tripp-smith.github.io/cuad-jev-bench/) |
 
+The public Pages site starts with a [How to read this report](https://maybern-tripp-smith.github.io/cuad-jev-bench/) glossary. Companions: [`OVERVIEW.md`](OVERVIEW.md), [`REPORT.md`](REPORT.md), [`ANALYSIS.md`](ANALYSIS.md).
+
 ## Selected estimates
 
 | Gate | Estimate |
 |------|----------|
 | 1 Easy-pair inversion ≤ 0.05 | **PASS** — 0.000 (n=40, s.e. 0.000) |
-| 2 Labeled inversion + Brier | report — inv 0.320 (s.e. 0.033); Brier 0.250 (s.e. 0.026) |
-| 3 Jev MRR > BM25 MRR | **PASS_SIGNAL** — 0.917 (s.e. 0.021) > 0.469 (s.e. 0.041) |
-| 4 mean Score(gold) > mean Score(neg) | **PASS** — gap 2.130 (s.e. 0.067) |
-| 5 Brier / ECE | report — ECE 0.324 |
-| 6 Name/meta Δ inversion ≤ 0.05 | **PASS** — Δ 0.000 |
+| 2 Labeled inversion + Brier | report — inversion 0.320 (s.e. 0.033); Brier 0.250 (s.e. 0.026) |
+| 3 Jev mean reciprocal rank > Best Match 25 | **PASS_SIGNAL** — 0.917 (s.e. 0.021) > 0.469 (s.e. 0.041) |
+| 4 mean Score(gold) > mean Score(negatives) | **PASS** — gap 2.130 (s.e. 0.067) |
+| 5 Brier / expected calibration error | report — expected calibration error 0.324 |
+| 6 Name/meta change in inversion ≤ 0.05 | **PASS** — change 0.000 |
 | 7 Literature DeBERTa | report only (not re-run) |
 
-Total Jev cost ≈ **$0.043**; p50 latency ≈ **182 ms**. Details: [`REPORT.md`](REPORT.md), [`ANALYSIS.md`](ANALYSIS.md), [`results/diagnostics.json`](results/diagnostics.json).
+Total Jev cost ≈ **$0.043**; median (50th percentile) latency ≈ **182 milliseconds**. Details: [`REPORT.md`](REPORT.md), [`ANALYSIS.md`](ANALYSIS.md), [`results/diagnostics.json`](results/diagnostics.json).
 
 ## Quickstart
 
 ```bash
 python -m venv .venv && source .venv/bin/activate
-pip install -r requirements.txt
+pip install -e .
+# or: uv sync
 # place CUAD_v1.json under data/raw/CUAD_v1/ (see DATA.md)
 export TYPESAFE_API_KEY=...
 python scripts/prepare_cuad.py
@@ -41,6 +54,8 @@ python scripts/plot_figures.py
 python scripts/render_docs.py
 ```
 
+Dependencies live in `pyproject.toml` (PEP 621). This published run is already scored; the commands are the reconstruction path. Do not mutate frozen gold. Do not treat Gate 7 as a command that runs DeBERTa.
+
 ## Layout
 
 ```
@@ -49,6 +64,7 @@ runs/jev/cache/
 results/          # gates, diagnostics, cost, timing, figures
 scripts/
 docs/             # GitHub Pages
+pyproject.toml    # install: pip install -e .  or  uv sync
 ```
 
 ## License

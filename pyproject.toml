@@ -1,0 +1,51 @@
+[project]
+name = "cuad-jev-bench"
+version = "0.1.0"
+description = "Pre-registered TypeSafe/Jev evaluation of CUAD contract-clause relevance"
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.10"
+authors = [{ name = "Tripp Smith" }]
+keywords = ["CUAD", "Jev", "TypeSafe", "contract-review", "evaluation"]
+classifiers = [
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+]
+dependencies = [
+  "typesafe-sdk>=0.1.0",
+  "pandas>=2.0",
+  "scipy>=1.11",
+  "matplotlib>=3.8",
+  "rank-bm25>=0.2.2",
+  "numpy>=1.26",
+  "tqdm>=4.66",
+  "huggingface_hub>=0.20",
+]
+
+[project.urls]
+Homepage = "https://maybern-tripp-smith.github.io/cuad-jev-bench/"
+Repository = "https://github.com/maybern-tripp-smith/cuad-jev-bench"
+"Gate report" = "https://maybern-tripp-smith.github.io/cuad-jev-bench/report.html"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+# Script-style repo: install deps via `pip install -e .` or `uv sync`.
+# Pages HTML is rendered by scripts/render_docs.py (stdlib only), so there is
+# no docs extra. Wheel ships the helper package; run score.py from the checkout.
+[tool.hatch.build.targets.wheel]
+packages = ["scripts"]
+force-include = { "score.py" = "score.py" }
+
+[tool.hatch.build.targets.sdist]
+include = [
+  "score.py",
+  "scripts/**/*.py",
+  "README.md",
+  "LICENSE",
+  "pyproject.toml",
+]

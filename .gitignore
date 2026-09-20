@@ -4,5 +4,7 @@ __pycache__/
 .env
 .env.*
 *.egg-info/
+dist/
+build/
 .DS_Store
 data/raw/CUAD_v1/full_contract_pdf/
