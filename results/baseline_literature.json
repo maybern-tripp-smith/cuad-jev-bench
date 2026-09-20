@@ -1,0 +1,12 @@
+{
+  "model": "DeBERTa-xlarge (published CUAD extractive QA)",
+  "citation": "Hendrycks et al., CUAD: An Expert-Annotated NLP Dataset for Legal Contract Review, NeurIPS 2021 Datasets & Benchmarks. https://arxiv.org/abs/2103.06268",
+  "metrics": {
+    "AUPR": 47.8,
+    "P_at_80_recall": 44.0,
+    "P_at_90_recall": 17.8,
+    "Jaccard_ge_0.5": "See CUAD paper / https://www.atticusprojectai.org/ \u2014 extractive overlap metric; not recomputed here"
+  },
+  "note": "Literature extractive SOTA cited for difficulty narrative only. This bench does NOT re-run DeBERTa. Task shape differs: candidate Score / pairwise Choice vs extractive span QA.",
+  "jaccard_ge_0.5_source": "CUAD paper / Atticus leaderboard reporting for DeBERTa-xlarge"
+}

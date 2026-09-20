@@ -1,0 +1,226 @@
+{
+  "run_id": "cuad-jev-2026-09-20",
+  "criterion": "more relevant to the requested contract category",
+  "model_requested": "jev-latest",
+  "model_resolved": "jev-1.13.0",
+  "gates": {
+    "1_easy_pair_inversion": {
+      "metric": 0.0,
+      "ste": 0.0,
+      "n": 40,
+      "pass_line": 0.05,
+      "result": "PASS",
+      "inverted_ids": []
+    },
+    "2_labeled_pair_inversion_brier": {
+      "inversion": 0.32,
+      "inversion_ste": 0.032429535531283436,
+      "brier": 0.249541375,
+      "brier_ste": 0.02568377396492393,
+      "mean_p_gold": 0.675725,
+      "n": 200,
+      "result": "report"
+    },
+    "3_candidate_score_vs_bm25": {
+      "jev_mrr": {
+        "mean": 0.9171666666666667,
+        "ste": 0.02117213790131268,
+        "n": 100
+      },
+      "bm25_mrr": {
+        "mean": 0.4693076319850975,
+        "ste": 0.04140573487108094,
+        "n": 100
+      },
+      "chance_mrr": {
+        "mean": 0.2980983717561098,
+        "ste": 0.0024601199191170466,
+        "n": 100
+      },
+      "jev_recall": {
+        "@1": {
+          "mean": 0.86,
+          "ste": 0.03477192238842407,
+          "n": 100
+        },
+        "@3": {
+          "mean": 0.97,
+          "ste": 0.01721116277664366,
+          "n": 100
+        },
+        "@5": {
+          "mean": 0.99,
+          "ste": 0.009897163929826262,
+          "n": 100
+        }
+      },
+      "bm25_recall": {
+        "@1": {
+          "mean": 0.35,
+          "ste": 0.04725022946170933,
+          "n": 100
+        },
+        "@3": {
+          "mean": 0.51,
+          "ste": 0.0498752638282941,
+          "n": 100
+        },
+        "@5": {
+          "mean": 0.57,
+          "ste": 0.0506524043463493,
+          "n": 100
+        }
+      },
+      "signal_jev_mrr_gt_bm25": true,
+      "result": "PASS_SIGNAL"
+    },
+    "4_construct_validity": {
+      "mean_score_gold": {
+        "mean": 2.685,
+        "ste": 0.06188476627132445,
+        "n": 100
+      },
+      "mean_score_neg": {
+        "mean": 0.5545011337868481,
+        "ste": 0.02653634230440275,
+        "n": 882
+      },
+      "gap": {
+        "mean": 2.130498866213152,
+        "ste": 0.06659452334665085
+      },
+      "gold_gt_neg": true,
+      "result": "PASS"
+    },
+    "5_secondary_calibration": {
+      "brier_stratum_b": 0.249541375,
+      "brier_ste": 0.025761573164979554,
+      "ece_stratum_b": 0.324275,
+      "n": 200,
+      "result": "report"
+    },
+    "6_name_meta_ablation": {
+      "inversion_stripped": 0.0,
+      "inversion_names_in": 0.0,
+      "delta_inversion": 0.0,
+      "pass_line": 0.05,
+      "result": "PASS",
+      "n": 40
+    },
+    "7_literature_deberta": {
+      "model": "DeBERTa-xlarge (published CUAD extractive QA)",
+      "citation": "Hendrycks et al., CUAD: An Expert-Annotated NLP Dataset for Legal Contract Review, NeurIPS 2021 Datasets & Benchmarks. https://arxiv.org/abs/2103.06268",
+      "metrics": {
+        "AUPR": 47.8,
+        "P_at_80_recall": 44.0,
+        "P_at_90_recall": 17.8,
+        "Jaccard_ge_0.5": "See CUAD paper / https://www.atticusprojectai.org/ \u2014 extractive overlap metric; not recomputed here"
+      },
+      "note": "Literature extractive SOTA cited for difficulty narrative only. This bench does NOT re-run DeBERTa. Task shape differs: candidate Score / pairwise Choice vs extractive span QA.",
+      "jaccard_ge_0.5_source": "CUAD paper / Atticus leaderboard reporting for DeBERTa-xlarge",
+      "result": "report"
+    }
+  },
+  "strata_summary": {
+    "A": {
+      "n": 40,
+      "n_inverted": 0,
+      "inversion": 0.0,
+      "inversion_ste": 0.0,
+      "mean_p_gold": 0.976125,
+      "mean_brier": 0.006524375000000001,
+      "brier_ste": 0.0035977765575345897,
+      "order_flip_rate": 0.0,
+      "inverted_ids": []
+    },
+    "B": {
+      "n": 200,
+      "n_inverted": 64,
+      "inversion": 0.32,
+      "inversion_ste": 0.032429535531283436,
+      "mean_p_gold": 0.675725,
+      "mean_brier": 0.249541375,
+      "brier_ste": 0.02568377396492393,
+      "order_flip_rate": 0.075,
+      "inverted_ids": [
+        "B004",
+        "B005",
+        "B008",
+        "B015",
+        "B021",
+        "B023",
+        "B026",
+        "B028",
+        "B029",
+        "B036",
+        "B035",
+        "B039",
+        "B044",
+        "B048",
+        "B060",
+        "B061",
+        "B068",
+        "B071",
+        "B079",
+        "B080",
+        "B081",
+        "B085",
+        "B087",
+        "B089",
+        "B094",
+        "B095",
+        "B096",
+        "B100",
+        "B103",
+        "B102",
+        "B105",
+        "B111",
+        "B116",
+        "B117",
+        "B119",
+        "B123",
+        "B128",
+        "B130",
+        "B129",
+        "B133",
+        "B140",
+        "B144",
+        "B145",
+        "B146",
+        "B150",
+        "B154",
+        "B155",
+        "B159",
+        "B161",
+        "B165",
+        "B167",
+        "B171",
+        "B172",
+        "B173",
+        "B175",
+        "B177",
+        "B181",
+        "B184",
+        "B186",
+        "B188",
+        "B191",
+        "B193",
+        "B196",
+        "B198"
+      ]
+    }
+  },
+  "names_in_summary": {
+    "A": {
+      "n": 40,
+      "n_inverted": 0,
+      "inversion": 0.0,
+      "inversion_ste": 0.0,
+      "mean_p_gold": 0.975875,
+      "mean_brier": 0.006494375000000002,
+      "brier_ste": 0.003559921728099395,
+      "order_flip_rate": 0.0,
+      "inverted_ids": []
+    }
+  }
+}

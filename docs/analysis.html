@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="utf-8"/><title>ANALYSIS — cuad-jev-bench</title>
+<style>
+body{font-family:Georgia,serif;max-width:820px;margin:2rem auto;padding:0 1rem;line-height:1.5;color:#222}
+nav a{margin-right:1rem}
+table{border-collapse:collapse;width:100%;margin:1rem 0;font-size:0.95rem}
+th,td{border:1px solid #ccc;padding:0.35rem 0.5rem;text-align:left}
+th{background:#f4f4f4}
+code,pre{font-family:ui-monospace,Menlo,monospace;font-size:0.88rem}
+pre{background:#f7f7f7;padding:0.75rem;overflow:auto}
+img{margin:1rem 0;border:1px solid #eee}
+h1,h2,h3{font-family:system-ui,sans-serif}
+ a.active{font-weight:bold}</style></head>
+<body>
+<nav><a href="index.html">Home</a><a href="report.html">Report</a><a href="analysis.html" class="active">Analysis</a></nav>
+<h1>ANALYSIS — cuad-jev-bench</h1>
+
+<p><strong>run_id:</strong> <code>cuad-jev-2026-09-20</code>  </p>
+<p><strong>model:</strong> <code>jev-1.13.0</code> (requested <code>jev-latest</code>)  </p>
+<p><strong>criterion (exact):</strong> <code>more relevant to the requested contract category</code></p>
+
+<h2>Abstract</h2>
+
+<p>We evaluate TypeSafe/Jev on open CUAD contract text under a frozen pairwise and graded-relevance protocol. Labels are human CUAD span annotations only. On 40 rule-built certain pairs (Stratum A), Choice inversion is 0.0000 (STE 0.0000). On 200 BM25 hard-negative pairs (Stratum B), inversion is 0.3200 (STE 0.0324) with Brier 0.2495. For 100 (contract, category) candidate-ranking queries, expected Score yields gold MRR 0.917 (STE 0.021) versus BM25 MRR 0.469 and chance MRR 0.298. Mean Score on gold spans exceeds mean Score on BM25 hard-negatives by 2.130 (STE 0.067). Name/date ablation leaves Stratum A inversion unchanged (Δ=0.0000). Published DeBERTa-xlarge extractive metrics are cited for difficulty context only; this bench does not re-run DeBERTa. Total Jev spend ≈ $0.04315; overall p50 latency 182 ms.</p>
+
+<h2>Contributions</h2>
+
+<p>1. A FedLock/fedjev-style open-data Jev bench for <strong>contract-clause relevance</strong> with pre-registered gates, frozen gold, and cost/latency reporting.</p>
+<p>2. Design A: certain cross-contract negatives + same-contract BM25 hard-negatives, both orders Choice.</p>
+<p>3. Candidate-score lite: BM25 top-10 re-ranked by Jev Score levels, with gold injection logged when needed for measurable rank.</p>
+<p>4. Construct-validity contrast (gold vs hard-neg Score means) separate from retrieval baselines.</p>
+<p>5. Explicit non-claim on DeBERTa: literature numbers only.</p>
+
+<h2>Methods</h2>
+
+<h3>Data</h3>
+
+<p>CUAD v1 (<code>theatticusproject/cuad</code>), CC BY 4.0. 510 contracts → 21598 paragraph chunks; 13823 human spans across 41 categories. See <code>DATA.md</code> and <code>data/stats/corpus_stats.json</code>.</p>
+
+<h3>Criterion and interfaces</h3>
+
+<li><strong>Choice</strong> instructions embed the category name and CUAD “Details” description, then ask which of Text A or Text B is <code>more relevant to the requested contract category</code>.</li>
+<li><strong>Score</strong> levels: <code>irrelevant / weakly relevant / relevant / highly relevant</code>. Expected score ∈ [0, 3].</li>
+<li>Main tables use <code>strip_meta</code> (party-like corporate names, dates, contact furniture). Gate 6 re-runs Stratum A with raw text.</li>
+
+<h3>Strata</h3>
+
+<table>
+<tr><th>Stratum</th><th>n</th><th>Construction</th></tr>
+<tr><td>A</td><td>40</td><td>Gold span vs paragraph from a contract with no annotation for that category</td></tr>
+<tr><td>B</td><td>200</td><td>Gold span vs BM25 hard-neg in same contract (seed 20260920)</td></tr>
+<tr><td>Candidates</td><td>100 queries × ≤10 paras</td><td>BM25 top-10; gold injected if absent</td></tr>
+</table>
+
+<p>Gold pairs were written to <code>data/pairs/gold_pairs.jsonl</code> <strong>before</strong> the first live call (REPORT mtime 17:30:16 EDT; gold mtime 17:32:37 EDT; score start after freeze).</p>
+
+<h3>Gates</h3>
+
+<p>Pre-registered in <code>REPORT.md</code> before any Jev output. Bootstrap STE (seed 20260920, 1000 resamples) where noted.</p>
+
+<h2>Results</h2>
+
+<h3>Gate table</h3>
+
+<table>
+<tr><th>#</th><th>Gate</th><th>Result</th><th>Detail</th></tr>
+<tr><td>1</td><td>Easy-pair inversion</td><td><strong>PASS</strong></td><td>0.0000 (n=40, STE=0.0000)</td></tr>
+<tr><td>2</td><td>Labeled inversion + Brier</td><td>report</td><td>inv=0.3200 STE=0.0324; Brier=0.2495 STE=0.0257; mean p(gold)=0.6757</td></tr>
+<tr><td>3</td><td>Candidate Score vs BM25</td><td><strong>PASS_SIGNAL</strong></td><td>Jev MRR=0.917 &gt; BM25=0.469; R@1=0.86 vs 0.35</td></tr>
+<tr><td>4</td><td>Construct validity</td><td><strong>PASS</strong></td><td>mean Score gold=2.685 (STE 0.062) &gt; neg=0.555 (STE 0.027); gap=2.130</td></tr>
+<tr><td>5</td><td>Brier / ECE (B)</td><td>report</td><td>Brier=0.2495; ECE=0.3243</td></tr>
+<tr><td>6</td><td>Name/meta ablation</td><td><strong>PASS</strong></td><td>Δ inversion=0.0000</td></tr>
+<tr><td>7</td><td>Literature DeBERTa</td><td>report</td><td>AUPR 47.8, P@80R 44.0, P@90R 17.8 (Hendrycks et al. 2021); not re-run</td></tr>
+</table>
+
+<h3>Cost and timing</h3>
+
+<p>Total ≈ <strong>$0.04315</strong> over 1542 logged calls (1027363 input tokens @ $0.042/MTok; output free). Overall latency mean 191.1 ms, <strong>p50 182 ms</strong>, p95 258 ms (concurrency 6).</p>
+
+<h3>Interpretation</h3>
+
+<p>Stratum A shows that under an easy relevance contrast, Jev Choice does not invert. Stratum B is harder: BM25-selected negatives from the same contract share topical vocabulary, and inversion rises to ~32%—consistent with a difficult discrimination setting rather than a vacuous task. Candidate Score recovers gold paragraphs far above BM25 and chance, and gold spans receive substantially higher expected Scores than hard-negatives (Gate 4), supporting construct validity of the relevance Score axis. Calibration on Stratum B (ECE ≈ 0.32) indicates overconfidence relative to binary gold; we report this without post-hoc temperature fitting. Gate 7’s DeBERTa numbers describe <strong>extractive</strong> difficulty on CUAD; our task is candidate scoring / pairwise relevance, so numerical comparison is narrative only.</p>
+
+<h2>Limitations</h2>
+
+<li>Paragraph chunking is heuristic; gold spans may cross chunk boundaries (we map via char overlap).</li>
+<li>BM25 hard-negatives are strong but not adversarial human negatives.</li>
+<li>Category descriptions are CUAD question “Details” text, not independently authored rubrics.</li>
+<li>No Haiku comparator (by design for this run).</li>
+<li>ECE uses ten equal-width bins on p(gold); sample size 200 limits bin stability.</li>
+<li>Gold injection for measurable rank inflates Jev rank opportunity relative to pure retrieval; BM25 metrics use pre-injection ranks.</li>
+
+<h2>Reproducibility</h2>
+
+<pre><code>
+python scripts/prepare_cuad.py          # requires data/raw/CUAD_v1/CUAD_v1.json
+python scripts/build_gold_pairs.py      # freezes pairs; do not mutate after scoring
+python score.py --concurrency 6
+python score.py --only-ablation --concurrency 6
+python scripts/analyze_gates.py
+python scripts/plot_figures.py
+</code></pre>
+
+<p>Environment: <code>TYPESAFE_API_KEY</code>. Seed <code>20260920</code>. Cache: <code>runs/jev/cache/</code>.</p>
+<hr/><p><small>cuad-jev-bench · run_id cuad-jev-2026-09-20 · CUAD CC BY 4.0 · code MIT</small></p>
+</body></html>

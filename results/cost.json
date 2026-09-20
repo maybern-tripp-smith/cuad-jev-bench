@@ -1,0 +1,41 @@
+{
+  "run_id": "cuad-jev-2026-09-20",
+  "price_per_mtok_input": 0.042,
+  "by_stratum": {
+    "choice_stripped_A": {
+      "n_calls": 80,
+      "n_cache_hits": 0,
+      "input_tokens": 48928,
+      "output_tokens": 2480,
+      "usd": 0.002055
+    },
+    "choice_stripped_B": {
+      "n_calls": 400,
+      "n_cache_hits": 2,
+      "input_tokens": 291158,
+      "output_tokens": 12338,
+      "usd": 0.012229
+    },
+    "score_candidates": {
+      "n_calls": 982,
+      "n_cache_hits": 0,
+      "input_tokens": 637421,
+      "output_tokens": 18658,
+      "usd": 0.026772
+    },
+    "choice_names_in_A": {
+      "n_calls": 80,
+      "n_cache_hits": 0,
+      "input_tokens": 49856,
+      "output_tokens": 2480,
+      "usd": 0.002094
+    }
+  },
+  "total": {
+    "n_calls": 1542,
+    "n_cache_hits": 2,
+    "input_tokens": 1027363,
+    "output_tokens": 35956,
+    "usd": 0.043149
+  }
+}

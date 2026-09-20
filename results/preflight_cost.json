@@ -1,0 +1,18 @@
+{
+  "run_id": "cuad-jev-2026-09-20",
+  "seed": 20260920,
+  "n_stratum_a": 40,
+  "n_stratum_b": 200,
+  "n_queries": 100,
+  "n_choice_calls_main": 480,
+  "n_choice_calls_ablation": 80,
+  "n_score_calls": 982,
+  "n_calls_total_est": 1542,
+  "avg_tok_choice_assumed": 900,
+  "avg_tok_score_assumed": 700,
+  "est_input_tokens": 1191400,
+  "est_usd": 0.05004,
+  "price_per_mtok_input": 0.042,
+  "target_budget_usd": 0.15,
+  "under_budget": true
+}

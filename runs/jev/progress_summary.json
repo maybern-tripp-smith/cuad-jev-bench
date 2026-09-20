@@ -1,0 +1,10 @@
+{
+  "n": 80,
+  "cache_hits": 0,
+  "failures": 0,
+  "input_tokens": 49856,
+  "usd": 0.002093952,
+  "resolved_model": "jev-1.13.0",
+  "run_id": "cuad-jev-2026-09-20",
+  "criterion": "more relevant to the requested contract category"
+}

@@ -1,0 +1,14 @@
+@misc{cuadjevbench2026,
+  title        = {cuad-jev-bench: TypeSafe/Jev Evaluation of CUAD Contract Clause Relevance},
+  author       = {Smith, Tripp},
+  year         = {2026},
+  howpublished = {\url{https://github.com/maybern-tripp-smith/cuad-jev-bench}},
+  note         = {run\_id cuad-jev-2026-09-20; CUAD corpus CC BY 4.0 (Atticus Project)}
+}
+
+@inproceedings{hendrycks2021cuad,
+  title     = {{CUAD}: An Expert-Annotated {NLP} Dataset for Legal Contract Review},
+  author    = {Hendrycks, Dan and Burns, Collin and Chen, Anya and Ball, Spencer},
+  booktitle = {NeurIPS Datasets and Benchmarks},
+  year      = {2021}
+}

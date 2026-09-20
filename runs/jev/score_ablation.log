@@ -1,0 +1,8 @@
+run_id=cuad-jev-2026-09-20 criterion='more relevant to the requested contract category' model=jev-latest pairs=240 queries=100 units=1406
+gold_pairs mtime=1789939957.7376142 score_start=1789940048.7024856
+jobs=80 concurrency=6
+[progress] calls=20 cache=0 fail=0 tok=12204 usd≈0.00051 model=jev-1.13.0
+[progress] calls=40 cache=0 fail=0 tok=24608 usd≈0.00103 model=jev-1.13.0
+[progress] calls=60 cache=0 fail=0 tok=37142 usd≈0.00156 model=jev-1.13.0
+[progress] calls=80 cache=0 fail=0 tok=49856 usd≈0.00209 model=jev-1.13.0
+DONE calls=80 cache=0 fail=0 tok=49856 usd≈0.00209 model=jev-1.13.0
