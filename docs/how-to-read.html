@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Pre-registered TypeSafe/Jev evaluation of contract-clause relevance on the Contract Understanding Atticus Dataset (run cuad-jev-2026-09-20).">
+<meta http-equiv="Cache-Control" content="no-cache">
+<title>cuad-jev-bench — How to read these results</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=IBM+Plex+Sans:wght@400;600&family=IBM+Plex+Mono:wght@400&display=swap">
+<style>
+
+:root {
+  --bg: #f7f5f0;
+  --paper: #ffffff;
+  --text: #1a1a1a;
+  --muted: #4a5568;
+  --accent: #1a365d;
+  --border: #d4cfc4;
+  --pass: #276749;
+  --serif: "Source Serif 4", "Palatino Linotype", Palatino, "Times New Roman", Times, serif;
+  --sans: "IBM Plex Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: var(--serif);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.65;
+  font-size: 17px;
+}
+header {
+  background: var(--paper);
+  border-bottom: 1px solid var(--border);
+  padding: 2rem 1.5rem 1.25rem;
+}
+header .kicker {
+  font-family: var(--sans);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0 0 0.5rem;
+}
+header h1 {
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: 1.75rem;
+  margin: 0 0 0.4rem;
+  letter-spacing: -0.02em;
+}
+header p { margin: 0; color: var(--muted); font-size: 0.95rem; font-family: var(--sans); }
+nav {
+  display: flex; gap: 1.25rem; flex-wrap: wrap;
+  padding: 0.65rem 1.5rem;
+  background: var(--paper);
+  border-bottom: 1px solid var(--border);
+  font-family: var(--sans);
+  font-size: 0.88rem;
+}
+nav a { color: var(--accent); text-decoration: none; }
+nav a.active { font-weight: 600; border-bottom: 2px solid var(--accent); }
+main {
+  max-width: 48rem;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 3rem;
+  background: var(--paper);
+  border-left: 1px solid var(--border);
+  border-right: 1px solid var(--border);
+  min-height: 70vh;
+}
+h1.page { font-size: 1.45rem; margin: 0 0 1rem; font-weight: 600; }
+h2 {
+  font-size: 1.15rem;
+  margin: 2rem 0 0.75rem;
+  padding-bottom: 0.25rem;
+  border-bottom: 1px solid var(--border);
+  font-weight: 600;
+}
+h3 { font-size: 1.02rem; margin: 1.35rem 0 0.5rem; font-weight: 600; }
+h4 { font-size: 0.96rem; margin: 1.1rem 0 0.4rem; font-weight: 600; }
+p { margin: 0.75rem 0; }
+.abstract, .howto {
+  border: 1px solid var(--border);
+  padding: 1rem 1.15rem;
+  margin: 0 0 1.5rem;
+  font-size: 0.98rem;
+}
+.abstract { background: #f0ebe3; }
+.howto { background: #eef2f6; }
+.abstract .label, .howto .label {
+  font-family: var(--sans);
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0 0 0.5rem;
+}
+.abstract p, .howto p { margin: 0.55rem 0; }
+.abstract p:last-child, .howto p:last-child { margin-bottom: 0; }
+.howto ol { margin: 0.4rem 0 0.2rem; }
+.howto table { margin: 0.75rem 0 0.35rem; background: #ffffff; }
+.howto th { background: #e4ebf2; }
+.howto p:last-child { margin-bottom: 0.15rem; }
+table { width: 100%; border-collapse: collapse; font-size: 0.86rem; margin: 1rem 0; font-family: var(--sans); }
+th, td { border: 1px solid var(--border); padding: 0.45rem 0.55rem; text-align: left; vertical-align: top; }
+th { background: #f0ebe3; font-weight: 600; }
+code, pre { font-family: var(--mono); font-size: 0.84rem; }
+code { background: #f0ebe3; padding: 0.1em 0.3em; }
+pre { background: #f0ebe3; padding: 1rem; overflow: auto; border: 1px solid var(--border); }
+pre code { background: none; padding: 0; }
+blockquote {
+  margin: 1rem 0;
+  padding: 0.35rem 1rem;
+  border-left: 3px solid var(--accent);
+  color: var(--muted);
+}
+.pass { color: var(--pass); font-weight: 600; font-family: var(--sans); }
+ul, ol { padding-left: 1.25rem; }
+li { margin: 0.35rem 0; }
+footer {
+  max-width: 48rem;
+  margin: 0 auto;
+  padding: 1.25rem;
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-family: var(--sans);
+  border-left: 1px solid var(--border);
+  border-right: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  background: var(--paper);
+}
+a { color: var(--accent); }
+.meta { font-family: var(--sans); font-size: 0.88rem; color: var(--muted); }
+figure { margin: 1.5rem 0 1.75rem; }
+figure img {
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--border);
+  background: #ffffff;
+  display: block;
+}
+figcaption {
+  font-size: 0.88rem;
+  color: var(--muted);
+  margin: 0.5rem 0 0;
+  line-height: 1.5;
+}
+
+</style>
+</head>
+<body>
+<header>
+<p class="kicker">Pre-registered evaluation · run cuad-jev-2026-09-20</p>
+<h1>cuad-jev-bench</h1>
+<p>A contract-clause relevance test on the Atticus public contracts, written so a non-specialist can rebuild it</p>
+</header>
+<nav>
+<a href="index.html">Overview</a> <a href="how-to-read.html" class="active">How to read</a> <a href="analysis.html">Analysis</a> <a href="report.html">Report</a> <a href="https://github.com/maybern-tripp-smith/cuad-jev-bench">GitHub</a>
+</nav>
+<main>
+<h1 class="page">How to read these results</h1>
+<p>This page is a <strong>scoreboard guide</strong>. It is not a second analysis and it is not the reconstruction manual. After one pass you should be able to open <a href="report.html"><code>REPORT.md</code></a> or <code>results/gates.json</code> and know, for each line, what question was asked, whether a pre-registered pass line applies, and what would have counted as strong, weak, or inconclusive <strong>on this design</strong>.</p>
+<p>The numbers below are the observed figures from run <code>cuad-jev-2026-09-20</code>. They are copied from the <a href="report.html">Report</a> and from <code>results/gates.json</code>. Nothing here is a product claim. Uncertainty is a <strong>standard error</strong> (written “s.e.”). We never use the letters STE. The machine-readable files store that same quantity under the key <code>ste</code>.</p>
+<p>If you need the corpus, the pair-construction rules, or the reconstruction commands, start with the <a href="index.html">Overview</a>. Methods, the full figure set, and limitations are in the <a href="analysis.html">Analysis</a>.</p>
+<div class="howto" id="if-you-only-look-at-three-numbers">
+<p class="label">If you only look at three numbers</p>
+<p>These three decide whether the pre-registered design worked on this run. They are not a product claim.</p>
+<table><thead><tr><th>Look at</th><th>Number on this run</th><th>Why it is the headline</th></tr></thead><tbody><tr><td>Easy-pair inversion (Gate 1)</td><td><strong>0.000</strong> (n=40, s.e. 0.000), <span class="pass">PASS</span></td><td>On the 40 obvious pairs, the judge never reversed the human label. A structured judge that fails the easy pairs is not ready for the hard ones.</td></tr><tr><td>Mean reciprocal rank versus Best Match 25 (Gate 3)</td><td><strong>0.917</strong> (s.e. 0.021) versus <strong>0.469</strong> (s.e. 0.041), <span class="pass">PASS_SIGNAL</span></td><td>When ten keyword candidates are re-ranked, the marked paragraph sits much nearer the top under Jev Score than under word-overlap. Chance among those lists is 0.298.</td></tr><tr><td>Score gap, gold minus hard-negative (Gate 4)</td><td><strong>2.130</strong> (s.e. 0.067), <span class="pass">PASS</span></td><td>Under the same category question, mean expected Score on marked spans (2.685) exceeds the mean on keyword distractors (0.555). That is the construct-validity check, not a retrieval slogan.</td></tr></tbody></table>
+<p>The other four gates are either report-only (2, 5, 7) or a robustness check that names and dates are not doing the work (6: change in inversion <strong>0.000</strong>). Read them after these three.</p>
+</div>
+<h2 id="what-this-scoreboard-is">What this scoreboard is</h2>
+<p>The <strong>Contract Understanding Atticus Dataset</strong> (CUAD, pronounced “quad”) is 510 public commercial contracts with human marks for 41 clause categories (13,823 spans), released by the Atticus Project (Hendrycks, Burns, Chen, and Ball, 2021; Creative Commons Attribution 4.0). <strong>Gold</strong> is those human-marked spans only. The judge never writes a label.</p>
+<p><strong>TypeSafe</strong> is an application programming interface for <em>typed</em> judgments (a structured object, not a chat paragraph). <strong>Jev</strong> is the judge model. This run requested <code>jev-latest</code>; live responses resolved to <strong><code>jev-1.13.0</code></strong>. The frozen criterion, never paraphrased in the call, is:</p>
+<p><code>more relevant to the requested contract category</code></p>
+<p>Two typed endpoints appear on the scoreboard.</p>
+<p><strong>Choice.</strong> Two texts, one category. The API returns a winner and probabilities. Each pair is shown twice, with the sides swapped, so a preference for whichever snippet is on the left cannot decide the outcome. The two probabilities are mapped onto the gold side and averaged. That average is <strong>p(gold)</strong>.</p>
+<p><strong>Score.</strong> One paragraph and four ordered levels — <code>irrelevant</code>, <code>weakly relevant</code>, <code>relevant</code>, <code>highly relevant</code>. The <strong>expected score</strong> is the probability-weighted level index (0 through 3).</p>
+<p><strong>Best Match 25</strong> (BM25) is a 1990s keyword ranking formula. It scores a paragraph by how often the query’s words appear, discounted by how common those words are and by paragraph length. It does not parse contracts. This bench uses it to pick same-contract look-alike distractors and as the ranking baseline. If the structured judge cannot beat “count the overlapping words,” the scoreboard is not showing more than lexical match.</p>
+<p>Two measurement ideas are easy to mix up:</p>
+<ol><li><strong>Annotation / location</strong> — did a system recover the same characters a human highlighted? That is extractive overlap.</li><li><strong>Relevance</strong> — given a category description, is text A more on-point than text B? That is this bench.</li></ol>
+<p>A nearby paragraph can share words with a <em>Cap On Liability</em> clause without being the cap. Keyword hit-rate and span overlap do not, by themselves, say that a model judged relevance.</p>
+<h2 id="pass-versus-a-reported-diagnostic">Pass versus a reported diagnostic</h2>
+<p>Seven <strong>gates</strong> were written into <code>REPORT.md</code> at 17:30:16 EDT on 20 September 2026, <strong>before</strong> any Jev call. Gold pairs were frozen at 17:32:37 EDT. A pass line that was not registered before those calls is not a fail, and it is not a pass.</p>
+<table><thead><tr><th>Label on the table</th><th>What it means</th><th>Which gates</th></tr></thead><tbody><tr><td><span class="pass">PASS</span> / <strong>FAIL</strong></td><td>A numeric line was registered in advance. The observed number is on the passing side of that line, or it is not.</td><td>1 (inversion ≤ 0.05), 4 (mean Score on gold &gt; mean Score on hard negatives), 6 (change in inversion ≤ 0.05)</td></tr><tr><td><span class="pass">PASS_SIGNAL</span></td><td>A directional inequality was registered, not a numeric cutoff. Jev’s mean reciprocal rank of gold must exceed Best Match 25’s.</td><td>3</td></tr><tr><td><strong>report</strong></td><td>No pass line. The number is a diagnostic you are meant to read, not a verdict.</td><td>2 (hard-pair inversion and Brier), 5 (calibration), 7 (published DeBERTa extractive numbers)</td></tr></tbody></table>
+<p><span class="pass">PASS</span> means only that the pre-registered line was met. It does not mean the model is calibrated, that it reads a full contract, or that it beat a published extractive system. <strong>report</strong> means you should not invent a pass/fail after seeing the number.</p>
+<h2 id="what-each-gate-asks">What each gate asks</h2>
+<p><strong>Gate 1 — easy pairs (pass/fail).</strong> On 40 <strong>Stratum A</strong> pairs — a marked span versus a paragraph from a <em>different</em> contract that has <strong>no</strong> human mark for that category — does the judge reverse the human label on more than 5 percent of pairs? The registered question is: can it do the obvious cases? Result: inversion <strong>0.000</strong> (n=40, s.e. 0.000). <span class="pass">PASS</span>. Zero inverted identifiers.</p>
+<p><strong>Gate 2 — hard pairs (report).</strong> On 200 <strong>Stratum B</strong> pairs — a marked span versus the highest Best Match 25 paragraph in the <em>same</em> contract that does not overlap the gold character range — how often does it reverse, and how sharp are the probabilities? No pass line: this is the difficult same-contract setting, not a second easy test. Result: inversion <strong>0.320</strong> (s.e. 0.033) — 64 of 200 pairs; mean Brier <strong>0.250</strong> (s.e. 0.026); mean <em>p</em>(gold) <strong>0.676</strong>.</p>
+<p><strong>Gate 3 — ranking versus Best Match 25 (signal).</strong> On 100 (contract, category) queries, each with up to ten candidate paragraphs, is Jev’s <strong>mean reciprocal rank</strong> of the marked paragraph higher than Best Match 25’s? Result: <strong>0.917</strong> (s.e. 0.021) versus <strong>0.469</strong> (s.e. 0.041); chance <strong>0.298</strong> (s.e. 0.002). Recall at 1 / 3 / 5: Jev 0.86 / 0.97 / 0.99 versus Best Match 25 0.35 / 0.51 / 0.57. <span class="pass">PASS_SIGNAL</span>.</p>
+<p><strong>Gate 4 — Score separation (pass/fail).</strong> Under the <strong>same</strong> category question, is mean expected Score on gold spans higher than mean expected Score on Best Match 25 hard negatives? That is the <strong>construct-validity</strong> check: does the Score axis move with category relevance, not merely with shared words? Result: gold <strong>2.685</strong> (s.e. 0.062, n=100) versus negatives <strong>0.555</strong> (s.e. 0.027, n=882); gap <strong>2.130</strong> (s.e. 0.067). <span class="pass">PASS</span>.</p>
+<p><strong>Gate 5 — calibration (report).</strong> On the 200 hard pairs, how far is <em>p</em>(gold) from the gold-as-correct label? <strong>Brier score</strong> <strong>0.250</strong> (s.e. 0.026); <strong>expected calibration error</strong> <strong>0.324</strong> (n=200). No pass line.</p>
+<p><strong>Gate 6 — name ablation (pass/fail).</strong> Re-run the 40 easy pairs with party names and dates left in. Does the inversion rate move by more than 0.05? The registered question is: was Gate 1 an artifact of matching letterhead? Result: stripped 0.000, names-in 0.000, change <strong>0.000</strong>. <span class="pass">PASS</span>.</p>
+<p><strong>Gate 7 — literature DeBERTa (report only).</strong> Publish three extractive numbers from Hendrycks et al. (2021) for a <strong>DeBERTa-xlarge</strong> model (Decoding-enhanced Bidirectional Encoder Representations from Transformers, extra-large size) that <em>highlights character spans</em> in a full contract. Area under the precision–recall curve <strong>47.8</strong>; precision at 80 percent recall <strong>44.0</strong>; precision at 90 percent recall <strong>17.8</strong>. <strong>Not a re-run.</strong> Different task shape. Not a within-bench baseline.</p>
+<h2 id="how-to-read-the-numbers">How to read the numbers</h2>
+<h3 id="inversion">Inversion</h3>
+<p>Each Choice pair is shown in both orders. If the averaged <em>p</em>(gold) is below 0.5, the implied winner is the distractor. That event is an <strong>inversion</strong>: the judge reversed the human label. The inversion rate is the share of pairs on which that happens.</p>
+<p><strong>0.000 on 40 easy pairs</strong> means none of those pairs inverted. <strong>0.320 on 200 hard pairs</strong> means 64 inverted. The second number is larger because the distractor was chosen to look like the marked span, not because Gate 2 “failed.” There was no Gate 2 pass line.</p>
+<p>An <strong>order-flip</strong> is narrower: the discrete winner in the A-then-B showing disagrees with the winner in the B-then-A showing. Stratum A: 0 of 40. Stratum B: 0.075 (15 of 200).</p>
+<h3 id="brier-score">Brier score</h3>
+<p><strong>Brier score</strong> is mean squared error of a probability. This bench treats the gold span as the correct side on every pair (label <em>y</em> = 1). On one pair the contribution is (<em>p</em>(gold) − 1)².</p>
+<table><thead><tr><th>If the judge says…</th><th>Brier contribution</th><th>Reading</th></tr></thead><tbody><tr><td><em>p</em>(gold) = 1.0</td><td>0</td><td>Certain, and on the gold side</td></tr><tr><td><em>p</em>(gold) = 0.5</td><td>0.25</td><td>A coin flip</td></tr><tr><td><em>p</em>(gold) = 0.0</td><td>1</td><td>Certain, and inverted</td></tr></tbody></table>
+<p>Stratum A mean Brier is <strong>0.007</strong> (s.e. 0.004): near-certain and almost never inverted. Stratum B mean Brier is <strong>0.250</strong> (s.e. 0.026): on average no sharper than a constant 0.5, even though mean <em>p</em>(gold) is 0.676, because the 64 inversions are costly when the judge is confident on the wrong side. Gate 5 reports the same 0.250 as a calibration diagnostic, not as a ranking score.</p>
+<h3 id="mean-reciprocal-rank">Mean reciprocal rank</h3>
+<p>For each of the 100 ranking queries, find the position of the first human-marked paragraph (1 = top of the list). <strong>Reciprocal rank</strong> is 1 divided by that position: rank 1 → 1.0; rank 2 → 0.5; rank 10 → 0.1. If gold is missing from the keyword list, Best Match 25’s reciprocal rank is 0.</p>
+<p><strong>Mean reciprocal rank</strong> averages those 1/rank values across the 100 queries. It rewards putting gold near the top and is not fooled by a system that is merely “somewhere in the ten.”</p>
+<p>Jev <strong>0.917</strong> (s.e. 0.021) versus Best Match 25 <strong>0.469</strong> (s.e. 0.041) is the Gate 3 signal. The gap, 0.448, is large relative to the two reported standard errors (about 0.021 and 0.041). We do not compute a separate significance test in <code>gates.json</code>; read the two means and their standard errors, not a <em>p</em>-value we did not publish.</p>
+<p><strong>Gold injection.</strong> On 28 of the 100 queries, no gold paragraph appeared in the Best Match 25 top 10. One gold paragraph was then inserted so Jev’s rank is measurable, and <code>gold_injected = true</code> is logged. Injection is <strong>not</strong> counted as keyword-retrieval success: Best Match 25 ranks use the pre-injection position (those 28 sit between 11 and 204). Jev always sees gold among the scored ten; the keyword baseline does not get that gift. Mean reciprocal rank here is therefore a re-ranking contrast on a shortlist, not “Jev retrieved the clause from the whole contract.”</p>
+<h3 id="recall-at-k">Recall at <em>k</em></h3>
+<p><strong>Recall at k</strong> is the share of the 100 queries for which a gold paragraph appears in the top <em>k</em> of the ranked list. Recall at 1 is “was gold first?” Recall at 5 is “was gold somewhere in the first five?” Chance among ten equally likely slots is <em>k</em>/10 (0.10, 0.30, 0.50).</p>
+<p>On this run: Jev 0.86 / 0.97 / 0.99 at <em>k</em> = 1 / 3 / 5 versus Best Match 25 0.35 / 0.51 / 0.57. Read recall at 1 next to mean reciprocal rank. A system can have high recall at 5 and a mediocre mean reciprocal rank if gold is usually present but rarely first. That is closer to the keyword column than to Jev’s.</p>
+<h3 id="score-gaps">Score gaps</h3>
+<p>Expected Score lives on 0 to 3. Gate 4 compares two means under the same category question: 100 gold spans versus 882 hard-negative paragraphs. The <strong>gap</strong> is 2.685 − 0.555 = <strong>2.130</strong> (s.e. 0.067). On a 0-to-3 axis, a gap of 2.13 with a standard error of 0.067 is a clean separation: gold sits near “highly relevant,” the keyword distractors sit between “irrelevant” and “weakly relevant.”</p>
+<p>The category-level panel in the <a href="analysis.html">Analysis</a> repeats that contrast per Atticus category. Bars with few queries are noisy; do not promote a single category bar into a finding.</p>
+<h3 id="cost-and-latency">Cost and latency</h3>
+<p>These are operations numbers, not quality numbers. They answer “what did the published run cost to score?” not “how well did the judge work?”</p>
+<table><thead><tr><th>Quantity</th><th>Observed</th><th>Source</th></tr></thead><tbody><tr><td>Total spend</td><td><strong>$0.043149</strong></td><td>1,542 logged calls; 1,027,363 input tokens at $0.042 per million input tokens; output free (<code>results/cost.json</code>)</td></tr><tr><td>Largest slice</td><td>$0.026772</td><td>982 candidate Score calls (637,421 input tokens)</td></tr><tr><td>Median (50th percentile) latency</td><td><strong>182 milliseconds</strong></td><td><code>results/timing.json</code>; mean 191.1 ms; 95th percentile 258 ms; concurrency 6</td></tr></tbody></table>
+<p>Preflight estimated $0.050. The published run came in under that estimate. A cheaper run would not make Gate 2 look better.</p>
+<h3 id="standard-errors">Standard errors</h3>
+<p><strong>Rates</strong> (inversion, order-flip, recall at <em>k</em>): binomial standard error √[<em>p</em>(1 − <em>p</em>)/<em>n</em>]. Forty zeros have standard error 0.</p>
+<p><strong>Means</strong> (Brier, expected Score, mean reciprocal rank): sample standard deviation over √<em>n</em>, with a 1,000-draw bootstrap standard error retained in <code>gates.json</code> where it was already computed.</p>
+<p><strong>Gate 4 gap.</strong> The diagnostic file also stores √(s.e._gold² + s.e._neg²); the table’s 0.067 is the bootstrap gap standard error.</p>
+<p>A gap many times its standard error is evidence of separation on <em>this</em> sample. It is not a claim about every Atticus category or about a different pair-construction rule.</p>
+<h2 id="strong-weak-and-inconclusive-on-this-design">Strong, weak, and inconclusive on this design</h2>
+<p>The pass lines are the ones that were registered. “Strong” here means the observed number sits well inside a registered line, or the registered inequality is large relative to the reported standard errors. It does not mean “ready for production contract review.”</p>
+<p><strong>What would count as strong on this design</strong></p>
+<ul><li>Gate 1 inversion at or under 0.05, and preferably near 0. Observed: <strong>0.000</strong>.</li><li>Gate 3 Jev mean reciprocal rank above Best Match 25 by a gap that is large relative to the two standard errors, not a 0.01 difference on noisy estimates. Observed: <strong>0.917</strong> versus <strong>0.469</strong>.</li><li>Gate 4 Score gap clearly above zero relative to its standard error, with gold mean well above the distractor mean on the 0-to-3 axis. Observed: gap <strong>2.130</strong> (s.e. 0.067).</li><li>Gate 6 change in inversion at or under 0.05. Observed: <strong>0.000</strong>.</li></ul>
+<p>On those four registered checks, this run is on the strong side of the design it wrote down.</p>
+<p><strong>What would count as weak on this design</strong></p>
+<ul><li>Gate 1 inversion above 0.05: the judge reverses obvious gold-versus-unrelated pairs.</li><li>Gate 3 Jev mean reciprocal rank at or below Best Match 25: Score adds no ranking signal over word overlap.</li><li>Gate 4 gap consistent with zero or negative: the Score axis does not separate marked spans from keyword distractors under the same category question.</li><li>Gate 6 change above 0.05: easy-pair success may be letterhead matching.</li></ul>
+<p>None of those weak patterns is what this run shows.</p>
+<p><strong>What is inconclusive — do not promote these into a verdict</strong></p>
+<ul><li><strong>Gate 2 inversion 0.320.</strong> About one hard pair in three inverts. That is the intended difficult setting. There is no pass line. A rate near 0 on Stratum B would have suggested the hard negatives were not hard. A rate near 0.5 would have suggested no discrimination. 0.320 sits between those stories; it is a diagnostic of difficulty, not a hidden fail.</li><li><strong>Gate 5 Brier 0.250 and expected calibration error 0.324.</strong> These say assigned <em>p</em>(gold) is not near-certain on hard pairs (and Gate 5’s 0.324 uses the gold-as-correct convention, <em>y</em> = 1). The reliability figure’s printed number uses discrete correctness (1 minus inversion) and is 0.109 in <code>results/diagnostics.json</code>. Neither number is a ranking verdict. We did not fit a temperature after the fact.</li><li><strong>Gate 7 DeBERTa 47.8 / 44.0 / 17.8.</strong> Published extractive numbers from a different task. They tell you the original highlighting problem is hard. They do not score Jev.</li><li><strong>Category bars with few pairs.</strong> The Analysis figure keeps categories with at least three Stratum B pairs; those standard errors are still wide. Do not rank “Jev is good at Insurance, bad at Volume Restriction” from one bar.</li><li><strong>Cost and latency.</strong> $0.043 and 182 milliseconds describe the published scoring bill.</li></ul>
+<h2 id="what-these-results-do-not-prove">What these results do not prove</h2>
+<p>Read this list before quoting a PASS in a memo.</p>
+<ul><li><strong>They do not prove that Jev beat DeBERTa.</strong> Gate 7 copies published extractive numbers (Hendrycks et al., 2021). DeBERTa-xlarge was trained to highlight character spans in a full contract. This bench scores already-cut excerpts and pairwise Choice. We did not re-run DeBERTa. Area under the precision–recall curve 47.8 is not a Jev metric.</li><li><strong>They do not prove full-contract question answering.</strong> Candidates are paragraph-ish chunks (target ≤1,600 characters). Gold spans that cross a chunk boundary are mapped by character overlap. The judge never sees the whole agreement as one document. Excerpt design is not extractive span highlighting, and it is not a lawyer reading the PDF.</li><li><strong>They do not prove retrieval from a raw contract.</strong> On 28 of 100 ranking queries, gold was inserted into the scored ten so Jev’s rank is measurable. Best Match 25 is scored on the pre-injection list. Gate 3 is a re-ranking contrast, not “the model found the clause in 21,598 paragraphs.”</li><li><strong>They do not prove the probabilities are well calibrated.</strong> Gate 5 is report-only. Expected calibration error 0.324 (<em>y</em> = 1) says <em>p</em>(gold) sits well short of certainty that the marked span is the more relevant text. We report that without a pass line and without a post-hoc recalibration.</li><li><strong>They do not prove the distractors were the hardest a human could write.</strong> Hard negatives are Best Match 25 look-alikes in the same contract, not adversarially authored near-misses.</li><li><strong>They do not prove a legal-advice or diligence-quality claim.</strong> The criterion is relevance to an Atticus category prompt, not “would counsel rely on this.”</li><li><strong>They do not prove every category.</strong> Forty-one Atticus categories are unevenly represented; rare categories are noisy. Seed <code>20260920</code> fixed the pair draw.</li><li><strong>They do not prove a different judge, a chat model, or a later <code>jev-latest</code> pin.</strong> The resolved model is <code>jev-1.13.0</code>. Main tables do not use Haiku or Grok-as-judge.</li></ul>
+<h2 id="where-to-look-next">Where to look next</h2>
+<table><thead><tr><th>If you want…</th><th>Open</th></tr></thead><tbody><tr><td>Terms, pair construction, reconstruction steps</td><td><a href="index.html">Overview</a></td></tr><tr><td>Methods, all figures, interpretation, limitations</td><td><a href="analysis.html">Analysis</a></td></tr><tr><td>Gate table, freeze timestamps, cost by slice</td><td><a href="report.html">Report</a></td></tr><tr><td>Machine-readable gates and diagnostics</td><td><code>results/gates.json</code>, <code>results/diagnostics.json</code>, <code>results/cost.json</code>, <code>results/timing.json</code></td></tr><tr><td>Figure captions</td><td><a href="https://github.com/maybern-tripp-smith/cuad-jev-bench/blob/main/results/figures/CAPTIONS.md"><code>results/figures/CAPTIONS.md</code></a></td></tr><tr><td>How the pairs were frozen</td><td><a href="https://github.com/maybern-tripp-smith/cuad-jev-bench/blob/main/data/pairs/PAIR_MANIFEST.md"><code>data/pairs/PAIR_MANIFEST.md</code></a></td></tr></tbody></table>
+</main>
+<footer>
+Research instrumentation only. Contract Understanding Atticus Dataset text is CC BY 4.0 (Atticus Project). Companion repository:
+<a href="https://github.com/maybern-tripp-smith/cuad-jev-bench">maybern-tripp-smith/cuad-jev-bench</a>.
+
+</footer>
+</body>
+</html>

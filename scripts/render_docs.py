@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Render OVERVIEW.md / ANALYSIS.md / REPORT.md into the light paper HTML under docs/."""
+"""Render OVERVIEW.md / HOW_TO_READ.md / ANALYSIS.md / REPORT.md into docs/."""
 
 from __future__ import annotations
 
@@ -102,6 +102,9 @@ p { margin: 0.75rem 0; }
 .abstract p, .howto p { margin: 0.55rem 0; }
 .abstract p:last-child, .howto p:last-child { margin-bottom: 0; }
 .howto ol { margin: 0.4rem 0 0.2rem; }
+.howto table { margin: 0.75rem 0 0.35rem; background: #ffffff; }
+.howto th { background: #e4ebf2; }
+.howto p:last-child { margin-bottom: 0.15rem; }
 table { width: 100%; border-collapse: collapse; font-size: 0.86rem; margin: 1rem 0; font-family: var(--sans); }
 th, td { border: 1px solid var(--border); padding: 0.45rem 0.55rem; text-align: left; vertical-align: top; }
 th { background: #f0ebe3; font-weight: 600; }
@@ -152,6 +155,7 @@ REPO = "https://github.com/maybern-tripp-smith/cuad-jev-bench"
 
 PAGE_LINKS = {
     "OVERVIEW.md": "index.html",
+    "HOW_TO_READ.md": "how-to-read.html",
     "ANALYSIS.md": "analysis.html",
     "REPORT.md": "report.html",
     "CITATION": f"{REPO}/blob/main/CITATION",
@@ -162,6 +166,7 @@ BOX_HEADINGS = {
     "How to read this report": "howto",
     "How to read this analysis": "howto",
     "Terms used in this report": "howto",
+    "If you only look at three numbers": "howto",
 }
 
 META_DESCRIPTION = (
@@ -390,6 +395,7 @@ def page(
     nav = []
     for href, label, key in (
         ("index.html", "Overview", "index"),
+        ("how-to-read.html", "How to read", "howto"),
         ("analysis.html", "Analysis", "analysis"),
         ("report.html", "Report", "report"),
     ):
@@ -434,11 +440,20 @@ Research instrumentation only. Contract Understanding Atticus Dataset text is CC
 
 def main() -> None:
     overview_md = (ROOT / "OVERVIEW.md").read_text()
+    howto_md = (ROOT / "HOW_TO_READ.md").read_text()
     analysis_md = (ROOT / "ANALYSIS.md").read_text()
     report_md = (ROOT / "REPORT.md").read_text()
 
     (DOCS / "index.html").write_text(
         page("cuad-jev-bench — Overview", "index", md_to_html(overview_md, drop_h1=True))
+    )
+    (DOCS / "how-to-read.html").write_text(
+        page(
+            "cuad-jev-bench — How to read these results",
+            "howto",
+            md_to_html(howto_md, drop_h1=True),
+            heading="How to read these results",
+        )
     )
     (DOCS / "analysis.html").write_text(
         page(
@@ -456,7 +471,7 @@ def main() -> None:
             heading="Report",
         )
     )
-    print("wrote docs/index.html docs/analysis.html docs/report.html")
+    print("wrote docs/index.html docs/how-to-read.html docs/analysis.html docs/report.html")
 
 
 if __name__ == "__main__":
