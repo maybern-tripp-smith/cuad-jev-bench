@@ -1,6 +1,6 @@
 # cuad-jev-bench
 
-Open-data **TypeSafe/Jev** evaluation of CUAD contract-clause relevance (FedLock / fedjev-style protocol).
+Pre-registered evaluation of **TypeSafe/Jev** on open CUAD contract text: pairwise Choice and graded Score under the fixed criterion `more relevant to the requested contract category`. The note distinguishes annotation/location measures from relevance judgments, reports standard errors (s.e.) throughout, and treats Gate 4 as construct validity (gold versus hard-negatives under the same category query). Gate 7 cites published DeBERTa extractive metrics for difficulty context only and does not re-run DeBERTa.
 
 | | |
 |--|--|
@@ -9,21 +9,21 @@ Open-data **TypeSafe/Jev** evaluation of CUAD contract-clause relevance (FedLock
 | **model** | `jev-latest` → `jev-1.13.0` |
 | **corpus** | [CUAD](https://huggingface.co/datasets/theatticusproject/cuad) (CC BY 4.0) |
 | **labels** | Human CUAD spans only |
-| **Pages** | [`docs/`](docs/) |
+| **Pages** | [https://maybern-tripp-smith.github.io/cuad-jev-bench/](https://maybern-tripp-smith.github.io/cuad-jev-bench/) |
 
-## Headline results
+## Selected estimates
 
-| Gate | Result |
-|------|--------|
-| 1 Easy-pair inversion ≤ 0.05 | **PASS** (0.00) |
-| 2 Labeled inversion + Brier | report (inv≈0.32, Brier≈0.25) |
-| 3 Jev MRR > BM25 MRR | **PASS_SIGNAL** (0.917 > 0.469) |
-| 4 mean Score(gold) > mean Score(neg) | **PASS** |
-| 5 Brier / ECE | report |
-| 6 Name/meta Δ inversion ≤ 0.05 | **PASS** (Δ=0.00) |
+| Gate | Estimate |
+|------|----------|
+| 1 Easy-pair inversion ≤ 0.05 | **PASS** — 0.000 (n=40, s.e. 0.000) |
+| 2 Labeled inversion + Brier | report — inv 0.320 (s.e. 0.033); Brier 0.250 (s.e. 0.026) |
+| 3 Jev MRR > BM25 MRR | **PASS_SIGNAL** — 0.917 (s.e. 0.021) > 0.469 (s.e. 0.041) |
+| 4 mean Score(gold) > mean Score(neg) | **PASS** — gap 2.130 (s.e. 0.067) |
+| 5 Brier / ECE | report — ECE 0.324 |
+| 6 Name/meta Δ inversion ≤ 0.05 | **PASS** — Δ 0.000 |
 | 7 Literature DeBERTa | report only (not re-run) |
 
-Total Jev cost ≈ **$0.043**; p50 latency ≈ **182 ms**. Details: [`REPORT.md`](REPORT.md), [`ANALYSIS.md`](ANALYSIS.md).
+Total Jev cost ≈ **$0.043**; p50 latency ≈ **182 ms**. Details: [`REPORT.md`](REPORT.md), [`ANALYSIS.md`](ANALYSIS.md), [`results/diagnostics.json`](results/diagnostics.json).
 
 ## Quickstart
 
@@ -38,6 +38,7 @@ python score.py --concurrency 6
 python score.py --only-ablation --concurrency 6
 python scripts/analyze_gates.py
 python scripts/plot_figures.py
+python scripts/render_docs.py
 ```
 
 ## Layout
@@ -45,7 +46,7 @@ python scripts/plot_figures.py
 ```
 data/raw|clean|labels|pairs|stats/
 runs/jev/cache/
-results/          # gates, cost, timing, figures
+results/          # gates, diagnostics, cost, timing, figures
 scripts/
 docs/             # GitHub Pages
 ```
