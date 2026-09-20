@@ -100,6 +100,9 @@ p { margin: 0.75rem 0; }
 .abstract p, .howto p { margin: 0.55rem 0; }
 .abstract p:last-child, .howto p:last-child { margin-bottom: 0; }
 .howto ol { margin: 0.4rem 0 0.2rem; }
+.howto table { margin: 0.75rem 0 0.35rem; background: #ffffff; }
+.howto th { background: #e4ebf2; }
+.howto p:last-child { margin-bottom: 0.15rem; }
 table { width: 100%; border-collapse: collapse; font-size: 0.86rem; margin: 1rem 0; font-family: var(--sans); }
 th, td { border: 1px solid var(--border); padding: 0.45rem 0.55rem; text-align: left; vertical-align: top; }
 th { background: #f0ebe3; font-weight: 600; }
@@ -154,12 +157,12 @@ figcaption {
 <p>A contract-clause relevance test on the Atticus public contracts, written so a non-specialist can rebuild it</p>
 </header>
 <nav>
-<a href="index.html">Overview</a> <a href="analysis.html" class="active">Analysis</a> <a href="report.html">Report</a> <a href="https://github.com/maybern-tripp-smith/cuad-jev-bench">GitHub</a>
+<a href="index.html">Overview</a> <a href="how-to-read.html">How to read</a> <a href="analysis.html" class="active">Analysis</a> <a href="report.html">Report</a> <a href="https://github.com/maybern-tripp-smith/cuad-jev-bench">GitHub</a>
 </nav>
 <main>
 <h1 class="page">Analysis</h1>
 <p><strong>run_id:</strong> <code>cuad-jev-2026-09-20</code> <strong>model:</strong> <code>jev-1.13.0</code> (requested <code>jev-latest</code>) <strong>criterion (exact):</strong> <code>more relevant to the requested contract category</code> <strong>repository:</strong> <a href="https://github.com/maybern-tripp-smith/cuad-jev-bench">maybern-tripp-smith/cuad-jev-bench</a> <strong>pages:</strong> <a href="https://maybern-tripp-smith.github.io/cuad-jev-bench/">https://maybern-tripp-smith.github.io/cuad-jev-bench/</a></p>
-<p>Companion gate report: <a href="report.html"><code>REPORT.md</code></a>. Landing-page glossary: <a href="index.html"><code>OVERVIEW.md</code></a>. Machine-readable results: <a href="https://github.com/maybern-tripp-smith/cuad-jev-bench/blob/main/results/gates.json"><code>results/gates.json</code></a>, <a href="https://github.com/maybern-tripp-smith/cuad-jev-bench/blob/main/results/diagnostics.json"><code>results/diagnostics.json</code></a>. Figure captions: <a href="https://github.com/maybern-tripp-smith/cuad-jev-bench/blob/main/results/figures/CAPTIONS.md"><code>results/figures/CAPTIONS.md</code></a>.</p>
+<p>Companion gate report: <a href="report.html"><code>REPORT.md</code></a>. Landing-page glossary: <a href="index.html"><code>OVERVIEW.md</code></a>. Scoreboard guide (not a second analysis): <a href="how-to-read.html"><code>HOW_TO_READ.md</code></a>. Machine-readable results: <a href="https://github.com/maybern-tripp-smith/cuad-jev-bench/blob/main/results/gates.json"><code>results/gates.json</code></a>, <a href="https://github.com/maybern-tripp-smith/cuad-jev-bench/blob/main/results/diagnostics.json"><code>results/diagnostics.json</code></a>. Figure captions: <a href="https://github.com/maybern-tripp-smith/cuad-jev-bench/blob/main/results/figures/CAPTIONS.md"><code>results/figures/CAPTIONS.md</code></a>.</p>
 <div class="howto" id="how-to-read-this-analysis">
 <p class="label">How to read this analysis</p>
 <p>This note is written so a mid-career economist — fluent in private-equity language and ordinary applied statistics, not in legal natural-language processing — can rebuild the measurement from the prose. Every short label used in a table below is taught in this section before the abstract uses it. Uncertainty is a <strong>standard error</strong> (s.e.), never written STE. Observed counts, dollars, and file times are from this run; we do not invent a metric or a DeBERTa number.</p>

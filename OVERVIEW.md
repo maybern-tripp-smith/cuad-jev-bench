@@ -4,6 +4,8 @@
 
 This site is written for a reader who is fluent in finance, private equity, and ordinary empirical work, and who has not spent time in legal natural-language processing or information retrieval. The bar is re-implementability: after one careful pass you should be able to download the same public contracts, freeze the same gold pairs (the human-marked clause spans, locked before any judge call), build the same keyword candidate lists, call the same structured judge, and recompute the same seven gates.
 
+This page teaches the terms and the procedure. For a scoreboard-only reading guide — what **PASS** means versus a reported diagnostic, what would count as strong or weak on this design, and what the numbers do not prove — see [How to read these results](HOW_TO_READ.md).
+
 Every short label that appears in a result table is taught in the sections below, in the order you need it, before that table. Uncertainty is a **standard error** (written “s.e.”). We never use the letters STE. Dollar amounts, sample sizes, dates, and seed `20260920` are the observed figures from run `cuad-jev-2026-09-20`. Nothing here is a product claim.
 
 Read in this order:
@@ -23,7 +25,7 @@ Read in this order:
 13. [How to read the figures](#how-to-read-the-figures) — what each axis is.
 14. [Selected estimates](#selected-estimates) — the numbers, now that the terms exist.
 
-Companions: the [Analysis](ANALYSIS.md) (methods, figures, limitations) and the [Report](REPORT.md) (gate tables, freeze timestamps, cost). Machine-readable outputs live in `results/gates.json` and `results/diagnostics.json`.
+Companions: [How to read these results](HOW_TO_READ.md) (scoreboard guide, not a second analysis), the [Analysis](ANALYSIS.md) (methods, figures, limitations), and the [Report](REPORT.md) (gate tables, freeze timestamps, cost). Machine-readable outputs live in `results/gates.json` and `results/diagnostics.json`.
 
 ## The corpus: CUAD and the Atticus Project
 
@@ -214,6 +216,7 @@ Existing figure files are unchanged. Each caption below states the sample size, 
 
 ## Documents
 
+- [How to read these results](HOW_TO_READ.md) — scoreboard guide: PASS versus report, how to read the numbers, what this design does not prove
 - [Analysis](ANALYSIS.md) — methods, full figure set, limitations, reconstruction commands
 - [Report](REPORT.md) — pre-registered gate table, freeze checkpoint, cost by slice
 - Machine-readable: `results/gates.json`, `results/diagnostics.json`, `results/cost.json`, `results/timing.json`

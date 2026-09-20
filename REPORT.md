@@ -9,7 +9,7 @@
 
 **Artifacts:** `results/gates.json` · `results/diagnostics.json` · `results/cost.json` · `results/timing.json` · `results/data_stats.json` · `results/accuracy_summary.json` · `results/baseline_literature.json`
 
-Teaching-first landing page: [`OVERVIEW.md`](OVERVIEW.md). Methods and figures: [`ANALYSIS.md`](ANALYSIS.md).
+Teaching-first landing page: [`OVERVIEW.md`](OVERVIEW.md). Scoreboard guide: [`HOW_TO_READ.md`](HOW_TO_READ.md). Methods and figures: [`ANALYSIS.md`](ANALYSIS.md).
 
 ## Terms used in this report
 

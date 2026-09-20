@@ -21,7 +21,7 @@ This repository is a pre-registered test of a **structured** contract-clause jud
 | **labels** | Human CUAD spans only |
 | **Pages** | [https://maybern-tripp-smith.github.io/cuad-jev-bench/](https://maybern-tripp-smith.github.io/cuad-jev-bench/) |
 
-The public Pages site starts with a [How to read this report](https://maybern-tripp-smith.github.io/cuad-jev-bench/) glossary. Companions: [`OVERVIEW.md`](OVERVIEW.md), [`REPORT.md`](REPORT.md), [`ANALYSIS.md`](ANALYSIS.md).
+The public Pages site starts with a [How to read this report](https://maybern-tripp-smith.github.io/cuad-jev-bench/) glossary. A separate [scoreboard guide](https://maybern-tripp-smith.github.io/cuad-jev-bench/how-to-read.html) says what PASS means, what would count as strong or weak on this design, and what the numbers do not prove. Companions: [`OVERVIEW.md`](OVERVIEW.md), [`HOW_TO_READ.md`](HOW_TO_READ.md), [`REPORT.md`](REPORT.md), [`ANALYSIS.md`](ANALYSIS.md).
 
 ## Selected estimates
 

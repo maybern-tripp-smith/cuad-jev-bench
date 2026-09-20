@@ -6,7 +6,7 @@
 **repository:** [maybern-tripp-smith/cuad-jev-bench](https://github.com/maybern-tripp-smith/cuad-jev-bench)
 **pages:** [https://maybern-tripp-smith.github.io/cuad-jev-bench/](https://maybern-tripp-smith.github.io/cuad-jev-bench/)
 
-Companion gate report: [`REPORT.md`](REPORT.md). Landing-page glossary: [`OVERVIEW.md`](OVERVIEW.md). Machine-readable results: [`results/gates.json`](results/gates.json), [`results/diagnostics.json`](results/diagnostics.json). Figure captions: [`results/figures/CAPTIONS.md`](results/figures/CAPTIONS.md).
+Companion gate report: [`REPORT.md`](REPORT.md). Landing-page glossary: [`OVERVIEW.md`](OVERVIEW.md). Scoreboard guide (not a second analysis): [`HOW_TO_READ.md`](HOW_TO_READ.md). Machine-readable results: [`results/gates.json`](results/gates.json), [`results/diagnostics.json`](results/diagnostics.json). Figure captions: [`results/figures/CAPTIONS.md`](results/figures/CAPTIONS.md).
 
 ## How to read this analysis
 
